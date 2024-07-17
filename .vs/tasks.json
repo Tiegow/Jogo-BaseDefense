@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+    {
+        "label": "build",
+        "type": "shell",
+        "command": "g++",
+        "args": [
+        "-g",
+        "${workspaceFolder}/src/main.cpp",
+        "-I", "${workspaceFolder}/libs/SFML-2.6.1/include",
+        "-L", "${workspaceFolder}/libs/SFML-2.6.1/lib",
+        "-lsfml-graphics",
+        "-lsfml-window",
+        "-lsfml-system",
+        "-o", "${workspaceFolder}/bin/main"
+        ],
+        "group": {
+        "kind": "build",
+        "isDefault": true
+        },
+        "problemMatcher": ["$gcc"]
+    }
+    ]
+}
