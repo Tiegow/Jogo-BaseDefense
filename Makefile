@@ -6,7 +6,7 @@ SRC_DIR = src
 BIN_DIR = bin
 
 # Nome do executável
-TARGET = $(BIN_DIR)/main
+TARGET = $(BIN_DIR)/game
 
 # Compilador e flags
 CXX = g++

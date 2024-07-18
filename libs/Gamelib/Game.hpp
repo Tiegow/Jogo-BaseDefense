@@ -1,18 +1,15 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <SFML/Graphics.hpp>
 #include "PauseGame.hpp"
 #include "Base.hpp"
 
 class Game
 {
 private:
-    sf::RenderWindow * janela;
     sf::VideoMode videoMode; //especificações da janela
     sf::Event evento;
 
-    // PlayGame play;
     PauseGame pauseGame;
     Base base;
     
@@ -20,6 +17,8 @@ private:
     void initJanela();
     void initBase();
 public:
+    sf::RenderWindow * janela;
+
     Game();
     ~Game();
 

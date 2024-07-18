@@ -1,12 +1,11 @@
 #ifndef PAUSEGAME_HPP
 #define PAUSEGAME_HPP
 
-#include <SFML/Graphics.hpp>
+#include "janFuncs.hpp"
 
 class PauseGame
 {
 private:
-    sf::RenderWindow * janela;
     sf::Event evento;
     bool paused;
     
@@ -14,13 +13,11 @@ public:
     PauseGame();
     ~PauseGame();
 
-    void pause(sf::RenderWindow* & janela);
-
-    void tratarEventos();
-    void update();
-    void render();
+    //Funções
+    void tratarEventos(sf::RenderWindow* & jan);
+    void update(sf::RenderWindow* & jan);
+    void render(sf::RenderWindow* & jan);
+    void pause(sf::RenderWindow* & jan);
 };
-
-void pausef(sf::RenderWindow* & jan);
 
 #endif

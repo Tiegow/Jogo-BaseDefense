@@ -34,7 +34,6 @@ Game::Game(){
 
 Game::~Game(){
     delete this->janela;
-    std::cout << "Deletando janela /n";
 }
 //----------------------------------------//
 
@@ -48,18 +47,16 @@ void Game::tratarEventos(){
     //Tratando eventos
     while (this->janela->pollEvent(this->evento))
     {
+        tratarJanela(this->janela,this->evento);
+
         switch (this->evento.type)
         {
-            case sf::Event::Closed:
-                this->janela->close();
-                break;
-
             case sf::Event::KeyPressed:
             //ESC
                 if(this->evento.key.code == sf::Keyboard::Escape){ 
-                    // this->pauseGame.pause(janela);
-                    pausef(janela);
+                    this->pauseGame.pause(this->janela);
                 }
+            //SPACE
                 if(this->evento.key.code == sf::Keyboard::Space)
                     base.receberDano();
                 break;
@@ -84,3 +81,4 @@ void Game::render(){
 
     this->janela->display();
 }
+//----------------------------------------//
