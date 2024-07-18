@@ -15,12 +15,12 @@ Base::~Base()
 }
 
 //Funções
-void Base::receberDano(){
+void Base::receberDano(int dano){
     if (this->vida < 0) //Reseta a vida pra 100 (TESTE)
     {
         this->vida = 100;
     }
-    this->vida -= 10;
+    this->vida -= dano;
 }
 
 void Base::update(){

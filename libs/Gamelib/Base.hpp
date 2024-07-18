@@ -1,7 +1,7 @@
 #ifndef BASE_HPP
 #define BASE_HPP
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 class Base
 {
@@ -14,7 +14,7 @@ public:
     Base();
     ~Base();
 
-    void receberDano();
+    void receberDano(int dano);
     void update();
 };
 

@@ -1,16 +1,15 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "PauseGame.hpp"
 #include "Base.hpp"
+#include "GameInterfaces.hpp"
 
 class Game
 {
 private:
     sf::VideoMode videoMode; //especificações da janela
     sf::Event evento;
-
-    PauseGame pauseGame;
+    bool paused;
     Base base;
     
     void initVars();
