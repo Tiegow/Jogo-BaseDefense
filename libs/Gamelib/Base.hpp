@@ -1,7 +1,7 @@
 #ifndef BASE_HPP
 #define BASE_HPP
 
-#include <SFML/Graphics/RectangleShape.hpp>
+#include "GameInterfaces.hpp"
 
 class Base
 {
@@ -14,8 +14,11 @@ public:
     Base();
     ~Base();
 
+    //Funções
+    void spawn(sf::RenderTarget& tela);
     void receberDano(int dano);
     void update();
+    void render(sf::RenderTarget& tela);
 };
 
 #endif

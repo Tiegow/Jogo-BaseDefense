@@ -2,8 +2,6 @@
 
 sf::Vector2f centrObjeto(sf::Vector2u tamJanela, sf::Vector2f tamObj){
     /*
-        @Vector2f
-
         - Recebe tamanho da janela
         - Recebe tamanho do objeto
 
@@ -16,7 +14,19 @@ sf::Vector2f centrObjeto(sf::Vector2u tamJanela, sf::Vector2f tamObj){
     return posicaoObj;
 }
 
-void pause(sf::RenderTarget& target){
+sf::Vector2f getMouseCoords(sf::RenderWindow& janela){
+    /*
+        - Recebe a janela
+
+        Retorna o vetor coordenada do mouse em relação à janela do jogo
+    */
+    sf::Vector2i mouseWindow = sf::Mouse::getPosition(janela);
+    sf::Vector2f mousePos = janela.mapPixelToCoords(mouseWindow);
+
+    return mousePos;
+}
+
+void pause(sf::RenderTarget& target){ // "Desenha" a tela de pause
     target.clear(sf::Color::Black);
 
     sf::RectangleShape botao;

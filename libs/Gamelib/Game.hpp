@@ -2,19 +2,21 @@
 #define GAME_HPP
 
 #include "Base.hpp"
-#include "GameInterfaces.hpp"
+#include "Player.hpp"
 
 class Game
 {
 private:
     sf::VideoMode videoMode; //especificações da janela
     sf::Event evento;
+    sf::Vector2f mousePos;
     bool paused;
+
+    Player heroi;
     Base base;
     
     void initVars();
     void initJanela();
-    void initBase();
 public:
     sf::RenderWindow * janela;
 

@@ -9,17 +9,9 @@ void Game::initVars(){
 
 void Game::initJanela(){
     this->videoMode.width = 1800;
-    this->videoMode.height = 1200;
+    this->videoMode.height = 1300;
     this->janela = new sf::RenderWindow(this->videoMode, "Base Defense", sf::Style::Titlebar | sf::Style::Close);
     this->janela->setFramerateLimit(60);
-}
-
-void Game::initBase(){
-    sf::Vector2u tamJanela = this->janela->getSize(); //tamanho da janela
-    sf::Vector2f tamBase = this->base.baseBody.getSize(); //tamanho da base
-
-    sf::Vector2f posicaoBase = centrObjeto(tamJanela, tamBase);
-    this->base.baseBody.setPosition(posicaoBase); //Inicia a base no centro da tela
 }
 //----------------------------------------//
 
@@ -28,7 +20,7 @@ void Game::initBase(){
 Game::Game(){
     this->initVars();
     this->initJanela();
-    this->initBase();
+    this->base.spawn(*this->janela);
 }
 
 Game::~Game(){
@@ -76,7 +68,14 @@ void Game::tratarEventos(){
             
                 default:
                     break;
-            }   
+            }
+
+            //Mouse
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+            {
+                this->mousePos = getMouseCoords(*this->janela);
+            }
+               
         }
     }
 }
@@ -92,6 +91,7 @@ void Game::update(){
     else{
         //Fluxo normal do game
         this->base.update();
+        this->heroi.update(this->mousePos);
     }
 }
 
@@ -101,7 +101,8 @@ void Game::render(){
     {
         this->janela->clear(sf::Color::White);
 
-        this->janela->draw(this->base.baseBody);
+        this->base.render(*this->janela);
+        this->heroi.render(*this->janela);
     }
     this->janela->display();
 }
