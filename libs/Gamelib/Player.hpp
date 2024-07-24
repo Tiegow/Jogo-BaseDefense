@@ -10,7 +10,8 @@ private:
     int municao;
     float velocidade;
     bool movendo;
-    sf::Vector2f posicao;
+    sf::Vector2f destino;
+    sf::Vector2f posicaoCentro;
 
     sf::Sprite sprite;
     sf::Texture textura;
@@ -19,15 +20,15 @@ private:
     void initTextura();
     void initSprite();
 public:
-    // sf::CircleShape body;
-
     Player();
     ~Player();
 
     //Funções
     sf::Vector2f getPosCentro();
-    void mover(sf::Vector2f mouseClick);
-    void update(sf::Vector2f mouseClick);
+    sf::Vector2f getPos();
+    void setDestino(sf::Vector2f mouseClick);
+    void mover();
+    void update();
     void render(sf::RenderTarget& tela);
 };
 

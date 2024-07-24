@@ -1,4 +1,5 @@
 #include "Player.hpp"
+#include <iostream>
 
 void Player::initTextura(){
     this->textura.loadFromFile("./assets/Player.png"); //Carrega a textura a partir de um arquivo
@@ -24,25 +25,26 @@ Player::~Player(){
 }
 
 //Funções
-void Player::mover(sf::Vector2f mouseClick){
-    if (mouseClick.y > 0 && mouseClick.x > 0)
+void Player::mover(){
+    if (this->destino.y > 0 && this->destino.x > 0)
     {
-        sf::Vector2f moverPara = mouseClick - this->posicao; //Vetor de direção ao ponto do click
-
-        float comprimento = std::sqrt(moverPara.x * moverPara.x + moverPara.y * moverPara.y);
+        sf::Vector2f direcao = this->destino - this->posicaoCentro; //Vetor de direção ao ponto do click
+        
+        float comprimento = std::sqrt(direcao.x * direcao.x + direcao.y * direcao.y);
         /*
             Calcula a magnitude do vetor de direção (Teorema de Pitágoras)
             - A magnitude do vetor é equivale à hipotenusa do triângulo formado pelos eixos do vetor
         */
 
-        if (comprimento != 0) //Normalizando vetor para obter um vetor unitário
+        if (comprimento != 0) //Normalizando vetor direção para obter um vetor unitário
         {
-            moverPara.x /= comprimento;
-            moverPara.y /= comprimento;
+            direcao.x /= comprimento;
+            direcao.y /= comprimento;
         }
 
-        sf::Vector2f movimento = moverPara * this->velocidade;
+        sf::Vector2f movimento = direcao * this->velocidade;
 
+        //Verifica se o jogador deve continuar andando
         if (std::sqrt(movimento.x * movimento.x + movimento.y * movimento.y) >= comprimento)
         {
             this->movendo = false;
@@ -69,9 +71,19 @@ sf::Vector2f Player::getPosCentro(){
     return centro;
 }
 
-void Player::update(sf::Vector2f mouseClick){
-    this->posicao = this->getPosCentro();
-    this->mover(mouseClick);
+sf::Vector2f Player::getPos()
+{
+    return this->sprite.getPosition();
+}
+
+void Player::setDestino(sf::Vector2f mouseClick)
+{
+    this->destino = mouseClick;
+}
+
+void Player::update(){
+    this->posicaoCentro = this->getPosCentro();
+    this->mover();
 }
 
 void Player::render(sf::RenderTarget& tela){
