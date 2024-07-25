@@ -18,6 +18,8 @@ Player::Player(){
     this->vida = 100;
     this->municao = 25;
     this->velocidade = 5;
+    this->intervaloAtaqueMax = 10.f;
+    this->intervaloAtaque = this->intervaloAtaqueMax;
     this->movendo = true;
 }
 Player::~Player(){
@@ -76,12 +78,52 @@ sf::Vector2f Player::getPos()
     return this->sprite.getPosition();
 }
 
+sf::FloatRect Player::getBounds()
+{
+    return this->sprite.getGlobalBounds();
+}
+
+void Player::updateAtaque()
+{
+    if (this->intervaloAtaque < this->intervaloAtaqueMax)
+    {
+        this->intervaloAtaque += 0.5;
+    }
+}
+
 void Player::setDestino(sf::Vector2f mouseClick)
 {
     this->destino = mouseClick;
 }
 
+bool Player::podeAtacar()
+{
+    if (this->intervaloAtaque >= this->intervaloAtaqueMax)
+    {
+        this->intervaloAtaque = 0;
+        return true;
+    }
+    
+    return false;
+}
+
+void Player::receberDano(int dano)
+{
+    this->vida -= dano;
+}
+
+void Player::setIntervAtaque(float max)
+{
+    this->intervaloAtaqueMax = max;
+}
+
+float Player::getIntervAtaque()
+{
+    return this->intervaloAtaqueMax;
+}
+
 void Player::update(){
+    this->updateAtaque();
     this->posicaoCentro = this->getPosCentro();
     this->mover();
 }

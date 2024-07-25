@@ -5,13 +5,15 @@ Tiro::Tiro()
 {
 }
 
-Tiro::Tiro(sf::Texture* textura, sf::Vector2f posicao, sf::Vector2f dir, float vel)
+Tiro::Tiro(sf::Texture* textura, sf::Vector2f posicao, sf::Vector2f dir, bool enemy)
 {
     this->sprite.setTexture(*textura);
     this->sprite.setScale(2.5, 2.5);
     this->sprite.setPosition(posicao);
     this->direcao = dir - posicao;
-    this->velocidade = vel;
+    this->inimigo = enemy;
+    this->velocidade = 10.f;
+    this->dano = 10;
     this->hit = false;
 }
 
@@ -24,14 +26,20 @@ sf::FloatRect Tiro::getBounds()
     return this->sprite.getGlobalBounds();
 }
 
+int Tiro::atingir()
+{
+    this->hit = true;
+    return this->dano; //Retorna o dano
+}
+
 bool Tiro::atingido()
 {
     return this->hit;
 }
 
-void Tiro::atingir()
+bool Tiro::isEnemy()
 {
-    this->hit = true;
+    return this->inimigo;
 }
 
 void Tiro::setDirecao(sf::Vector2f mouseClick)

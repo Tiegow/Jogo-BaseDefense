@@ -31,15 +31,18 @@ Game::Game(){
 
 Game::~Game(){
     delete this->janela;
+    this->janela = nullptr;
     
     //Itera sobre o map texturas para deletar os ponteiros pra sf::Texture
     for(auto &t : this->texturas){
         delete t.second;
+        t.second = nullptr;
     }
 
     //Itera sobre a list tiros para deletar os ponteiros pra Tiro
     for(auto *t : this->tiros){
         delete t;
+        t = nullptr;
     }
 }
 //----------------------------------------//
@@ -66,6 +69,7 @@ void Game::tratarEventos(){
                 if(this->evento.key.code == sf::Keyboard::Escape){ 
                     this->paused = !paused;
                 }
+                break;
 
             default:
                 break;
@@ -77,13 +81,10 @@ void Game::tratarEventos(){
             switch (this->evento.type)
             {
                 case sf::Event::KeyPressed:
-                //SPACE
-                    if(this->evento.key.code == sf::Keyboard::Space)
-                        base.receberDano(10);
                 //Q
-                    if(this->evento.key.code == sf::Keyboard::Q){
+                    if(this->evento.key.code == sf::Keyboard::Q && this->heroi.podeAtacar()){
                         this->mousePos = getMouseCoords(*this->janela);
-                        this->tiros.push_back(new Tiro(this->texturas["TIRO"], this->heroi.getPosCentro(), mousePos, 10.f));
+                        this->tiros.push_back(new Tiro(this->texturas["TIRO"], this->heroi.getPosCentro(), mousePos, false));
                     }
                     break;
             
@@ -106,6 +107,21 @@ void Game::tratarTiros(){
     for(auto *tiro : this->tiros){
         tiro->update();
 
+        //Colisões
+        if (tiro->isEnemy())
+        {
+            //Base
+            if (tiro->getBounds().intersects(this->base.baseBody.getGlobalBounds()))
+            {
+                this->base.receberDano(tiro->atingir());
+            }
+            //Player
+            if (tiro->getBounds().intersects(this->heroi.getBounds()))
+            {
+                this->heroi.receberDano(tiro->atingir());
+            }
+        }
+        
         //Removendo caso saia da tela ou atinja algo
         if
         (
@@ -117,6 +133,7 @@ void Game::tratarTiros(){
         )
         {
             delete tiro;
+            tiro = nullptr;
             this->tiros.erase(contador);
             --contador;
         }

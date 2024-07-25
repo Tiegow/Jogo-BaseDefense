@@ -15,6 +15,7 @@ public:
     ~Base();
 
     //Funções
+    int getVida();
     void spawn(sf::RenderTarget& tela);
     void receberDano(int dano);
     void update();

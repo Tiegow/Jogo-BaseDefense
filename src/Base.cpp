@@ -13,7 +13,12 @@ Base::~Base()
 {
 }
 
-//Funções
+int Base::getVida()
+{
+    return this->vida;
+}
+
+// Funções
 void Base::spawn(sf::RenderTarget& tela){
     sf::Vector2u tamJanela = tela.getSize(); //tamanho da janela
     sf::Vector2f tamBase = this->baseBody.getSize(); //tamanho da base
