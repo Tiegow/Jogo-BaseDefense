@@ -1,4 +1,5 @@
 #include "Base.hpp"
+#include <iostream>
 
 Base::Base()
 {
@@ -27,15 +28,24 @@ void Base::spawn(sf::RenderTarget& tela){
     this->baseBody.setPosition(posicaoBase); //Inicia a base no centro da tela
 }
 
-void Base::receberDano(int dano){
-    if (this->vida < 0) //Reseta a vida pra 100 (TESTE)
+bool Base::destruida()
+{
+    if (this->vida <= 0)
     {
-        this->vida = 100;
+        return true;
     }
-    this->vida -= dano;
+    
+    return false;
 }
 
-void Base::update(){
+void Base::receberDano(int dano){
+    if (this->vida > 0) 
+    {
+        this->vida -= dano;
+    }
+}
+
+void Base::update(){ 
     //Muda a cor da base conforme a vida diminui
     this->corVida = vida * 2;
     this->baseBody.setOutlineColor(sf::Color(255-corVida,corVida,0,255)); //Aumenta o tom de vermelho e diminui o tom de verde

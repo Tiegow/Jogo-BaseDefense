@@ -5,6 +5,7 @@
 void Game::initVars(){
     this->janela = nullptr;
     this->paused = false;
+    this->over = false;
 }
 
 void Game::initTexturas(){
@@ -76,7 +77,7 @@ void Game::tratarEventos(){
         }
 
         //Eventos do jogo
-        if (!this->paused)
+        if (!this->paused && !this->over)
         {
             switch (this->evento.type)
             {
@@ -143,24 +144,38 @@ void Game::tratarTiros(){
 }
 
 void Game::update(){
+    if (this->base.getVida() <= 0)
+    {
+        this->over = true;
+    }
+
     this->tratarEventos();
     
-    if (this->paused)
+    if (!this->over)
     {
-        //Abrir tela de pause
-        pause(*this->janela);
+        if (this->paused)
+        {
+            //Abrir tela de pause
+            pause(*this->janela);
+        }
+        else
+        {
+            //Fluxo normal do game
+            this->base.update();
+            this->heroi.update();
+            this->tratarTiros();
+        }
     }
-    else{
-        //Fluxo normal do game
-        this->base.update();
-        this->heroi.update();
-        this->tratarTiros();
+    else
+    {
+        gameOver(*this->janela);
     }
+    
 }
 
 void Game::render(){
-    //Limpa os frames antigos e renderiza um novo frame
-    if (!this->paused)
+    //Renderiza os elementos do jogo
+    if (!this->paused && !this->over)
     {
         this->janela->clear(sf::Color::White);
 

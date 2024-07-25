@@ -15,6 +15,7 @@ private:
     sf::Vector2f mousePos; //coordenada do mouse na janela
     std::map <std::string, sf::Texture*> texturas;
     bool paused;
+    bool over;
 
     Player heroi;
     Base base;

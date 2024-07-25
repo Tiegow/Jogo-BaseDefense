@@ -17,7 +17,8 @@ public:
     //Funções
     int getVida();
     void spawn(sf::RenderTarget& tela);
-    void receberDano(int dano);
+    bool destruida();
+    void receberDano(int dano);    
     void update();
     void render(sf::RenderTarget& tela);
 };

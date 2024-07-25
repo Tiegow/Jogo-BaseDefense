@@ -15,18 +15,26 @@ sf::Vector2f centrObjeto(sf::Vector2u tamJanela, sf::Vector2f tamObj){
 }
 
 sf::Vector2f getMouseCoords(sf::RenderWindow& janela){
-    /*
-        - Recebe a janela
-
-        Retorna o vetor coordenada do mouse em relação à janela do jogo
-    */
     sf::Vector2i mouseWindow = sf::Mouse::getPosition(janela);
     sf::Vector2f mousePos = janela.mapPixelToCoords(mouseWindow);
 
-    return mousePos;
+    return mousePos; // Retorna o vetor coordenada do mouse em relação à janela do jogo
 }
 
 void pause(sf::RenderTarget& target){ // "Desenha" a tela de pause
+    target.clear(sf::Color::Black);
+
+    sf::RectangleShape botao;
+    botao.setFillColor(sf::Color::Blue);
+    botao.setSize(sf::Vector2f(400.f,200.f));
+
+    sf::Vector2f botaoPos = centrObjeto(target.getSize(), botao.getSize());
+    botao.setPosition(botaoPos);
+
+    target.draw(botao);
+}
+
+void gameOver(sf::RenderTarget& target){ // "Desenha" a tela de fim de jogo
     target.clear(sf::Color::Black);
 
     sf::RectangleShape botao;
