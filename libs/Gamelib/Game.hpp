@@ -10,6 +10,7 @@
 class Game
 {
 private:
+    sf::Clock clock;
     sf::VideoMode videoMode; //especificações da janela
     sf::Event evento;
     sf::Vector2f mousePos; //coordenada do mouse na janela

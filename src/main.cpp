@@ -1,4 +1,6 @@
 #include "game.hpp"
+// #include <SFML/System.hpp>
+#include <iostream>
 
 int main()
 {
@@ -6,10 +8,10 @@ int main()
 
     //Game loop
     while (game.isRunning())
-    {   
-        //Update
+    {         
+        // //Update
         game.update();
-        //Render
+        // //Render
         game.render();
     }    
 

@@ -14,8 +14,7 @@ private:
     int vida;
     int municao;
     float velocidade;
-    float intervaloAtaque;
-    float intervaloAtaqueMax; //Define o intervalo entre os ataques do jogador (quanto menor, mais rápido vai atirar)
+    float cadenciaAtaque; //Tempo entre um ataque e outro em segundos
     bool movendo;
 
     void initTextura();
@@ -28,10 +27,9 @@ public:
     sf::Vector2f getPosCentro();
     sf::Vector2f getPos();
     sf::FloatRect getBounds();
-    void updateAtaque();
-    bool podeAtacar();
-    void setIntervAtaque(float max);
-    float getIntervAtaque();
+    bool podeAtacar(sf::Time deltaTime);
+    float getCadAtaque();
+    void setCadAtaque(float tempo);
     void setDestino(sf::Vector2f mouseClick);
     void receberDano(int dano);
     void mover();

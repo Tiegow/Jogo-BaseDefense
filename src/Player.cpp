@@ -18,8 +18,7 @@ Player::Player(){
     this->vida = 100;
     this->municao = 25;
     this->velocidade = 5;
-    this->intervaloAtaqueMax = 10.f;
-    this->intervaloAtaque = this->intervaloAtaqueMax;
+    this->cadenciaAtaque = 1; //Segundos
     this->movendo = true;
 }
 Player::~Player(){
@@ -83,12 +82,19 @@ sf::FloatRect Player::getBounds()
     return this->sprite.getGlobalBounds();
 }
 
-void Player::updateAtaque()
+bool Player::podeAtacar(sf::Time deltaTime)
 {
-    if (this->intervaloAtaque < this->intervaloAtaqueMax)
+    if (deltaTime.asSeconds() >= this->cadenciaAtaque)
     {
-        this->intervaloAtaque += 0.5;
+        return true;
     }
+    
+    return false;
+}
+
+float Player::getCadAtaque()
+{
+    return this->cadenciaAtaque;
 }
 
 void Player::setDestino(sf::Vector2f mouseClick)
@@ -96,34 +102,17 @@ void Player::setDestino(sf::Vector2f mouseClick)
     this->destino = mouseClick;
 }
 
-bool Player::podeAtacar()
-{
-    if (this->intervaloAtaque >= this->intervaloAtaqueMax)
-    {
-        this->intervaloAtaque = 0;
-        return true;
-    }
-    
-    return false;
-}
-
 void Player::receberDano(int dano)
 {
     this->vida -= dano;
 }
 
-void Player::setIntervAtaque(float max)
+void Player::setCadAtaque(float tempo)
 {
-    this->intervaloAtaqueMax = max;
-}
-
-float Player::getIntervAtaque()
-{
-    return this->intervaloAtaqueMax;
+    this->cadenciaAtaque = tempo;
 }
 
 void Player::update(){
-    this->updateAtaque();
     this->posicaoCentro = this->getPosCentro();
     this->mover();
 }
