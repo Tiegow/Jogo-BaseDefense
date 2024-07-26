@@ -77,17 +77,15 @@ void Game::tratarEventos(){
                 break;
         }
         //Eventos do jogo
-        sf::Time deltaTime = this->clock.getElapsedTime();
         if (!this->paused && !this->over)
         {
             switch (this->evento.type)
             {
                 case sf::Event::KeyPressed:
                 //Q
-                    if(this->evento.key.code == sf::Keyboard::Q && this->heroi.podeAtacar(deltaTime)){
+                    if(this->evento.key.code == sf::Keyboard::Q && this->heroi.podeAtacar()){
                         this->mousePos = getMouseCoords(*this->janela);
                         this->tiros.push_back(new Tiro(this->texturas["TIRO"], this->heroi.getPosCentro(), mousePos, false));
-                        this->clock.restart();
                     }
                     break;
             

@@ -5,6 +5,7 @@
 #include <list>
 #include "Base.hpp"
 #include "Player.hpp"
+#include "Inimigo.hpp"
 #include "Tiro.hpp"
 
 class Game

@@ -6,6 +6,7 @@
 class Player
 {
 private:
+    sf::Clock playerClock;
     sf::Vector2f destino;
     sf::Vector2f posicaoCentro;
     sf::Sprite sprite;
@@ -27,7 +28,7 @@ public:
     sf::Vector2f getPosCentro();
     sf::Vector2f getPos();
     sf::FloatRect getBounds();
-    bool podeAtacar(sf::Time deltaTime);
+    bool podeAtacar();
     float getCadAtaque();
     void setCadAtaque(float tempo);
     void setDestino(sf::Vector2f mouseClick);

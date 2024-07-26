@@ -20,6 +20,7 @@ Player::Player(){
     this->velocidade = 5;
     this->cadenciaAtaque = 1; //Segundos
     this->movendo = true;
+    this->playerClock.restart();
 }
 Player::~Player(){
 
@@ -82,10 +83,12 @@ sf::FloatRect Player::getBounds()
     return this->sprite.getGlobalBounds();
 }
 
-bool Player::podeAtacar(sf::Time deltaTime)
+bool Player::podeAtacar()
 {
-    if (deltaTime.asSeconds() >= this->cadenciaAtaque)
+    sf::Time dt = this->playerClock.getElapsedTime();
+    if (dt.asSeconds() >= this->cadenciaAtaque)
     {
+        this->playerClock.restart();
         return true;
     }
     
