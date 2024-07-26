@@ -6,7 +6,11 @@
 class Base
 {
 private:
+    sf::Clock baseClock;
+    int velCura; //Tempo em segundos entre as curas automaticas da base
+    int autoCura; //Quantidade de vida que a base recupera a cada cura automatica
     int vida;
+    int maxVida;
     int corVida;
 public:
     sf::RectangleShape baseBody;
@@ -15,6 +19,8 @@ public:
     ~Base();
 
     //Funções
+    void curar(int cura);
+    void curar(); //Cura automatica
     int getVida();
     void spawn(sf::RenderTarget& tela);
     bool destruida();

@@ -6,12 +6,21 @@ void Game::initVars(){
     this->janela = nullptr;
     this->paused = false;
     this->over = false;
+    this->spawnInimVel = 3;
+    this->maxInimigos = 3;
     this->clock.restart();
 }
 
 void Game::initTexturas(){
+    /*
+        Carrega as texturas de objetos que se acumulam no jogo
+        - Evita ter que rodar .loadFromFile toda vez que surgir um objeto novo
+    */
     this->texturas["TIRO"] = new sf::Texture;
     this->texturas["TIRO"]->loadFromFile("./assets/Tiro.png");
+
+    this->texturas["INIMIGO1"] = new sf::Texture;
+    this->texturas["INIMIGO1"]->loadFromFile("./assets/Inimigo1.png");
 }
 
 void Game::initJanela(){
@@ -36,15 +45,21 @@ Game::~Game(){
     this->janela = nullptr;
     
     //Itera sobre o map texturas para deletar os ponteiros pra sf::Texture
-    for(auto &t : this->texturas){
-        delete t.second;
-        t.second = nullptr;
+    for(auto &textura : this->texturas){
+        delete textura.second;
+        textura.second = nullptr;
     }
 
     //Itera sobre a list tiros para deletar os ponteiros pra Tiro
-    for(auto *t : this->tiros){
-        delete t;
-        t = nullptr;
+    for(auto *tiro : this->tiros){
+        delete tiro;
+        tiro = nullptr;
+    }
+
+    //Itera sobre a list inimigos para deletar os ponteiros pra Inimigo
+    for(auto *inim : this->inimigos){
+        delete inim;
+        inim = nullptr;
     }
 }
 //----------------------------------------//
@@ -122,6 +137,16 @@ void Game::tratarTiros(){
                 this->heroi.receberDano(tiro->atingir());
             }
         }
+        else
+        {
+            //Inimigos
+            for(auto *inimigo : this->inimigos){
+                if (tiro->getBounds().intersects(inimigo->getBounds()))
+                {
+                    inimigo->receberDano(tiro->atingir());
+                }
+            }
+        }
         
         //Removendo caso saia da tela ou atinja algo
         if
@@ -136,10 +161,46 @@ void Game::tratarTiros(){
             delete tiro;
             tiro = nullptr;
             this->tiros.erase(contador);
-            --contador;
+            contador--;
         }
 
         ++contador;
+    }
+}
+
+void Game::tratarInimigos()
+{
+    //Spawnando inimigo
+    sf::Time dt = this->clock.getElapsedTime();
+    if (dt.asSeconds() >= this->spawnInimVel)
+    {
+        if (this->inimigos.size() < this->maxInimigos)
+        {
+            this->clock.restart();
+            this->inimigos.push_back(new Inimigo(this->texturas["INIMIGO1"]));
+        }
+    }
+
+    std::list<Inimigo*>::iterator contador = this->inimigos.begin();
+    for (auto *inimigo : this->inimigos)
+    {
+        inimigo->update(this->heroi.getPosCentro());
+
+        if (inimigo->atacar())
+        {
+            this->tiros.push_back(new Tiro(this->texturas["TIRO"], inimigo->getPosCentro(), this->heroi.getPosCentro(), true));
+        }
+
+        //Removendo ao morrer
+        if (inimigo->getVida() <= 0)
+        {
+            delete inimigo;
+            inimigo = nullptr;
+            this->inimigos.erase(contador);
+            contador--;
+        }
+        
+        contador++;
     }
 }
 
@@ -162,7 +223,8 @@ void Game::update(){
         {
             //Fluxo normal do game
             this->base.update();
-            this->heroi.update();
+            this->heroi.update(*this->janela);
+            this->tratarInimigos();
             this->tratarTiros();
         }
     }
@@ -181,7 +243,10 @@ void Game::render(){
 
         this->base.render(*this->janela);
         this->heroi.render(*this->janela);
-
+        
+        for(auto *inimigo : this->inimigos){
+            inimigo->render(*this->janela);
+        }
         for(auto *tiro : this->tiros){
             tiro->render(*this->janela);
         }

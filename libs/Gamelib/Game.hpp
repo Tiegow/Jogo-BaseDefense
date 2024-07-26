@@ -18,9 +18,12 @@ private:
     std::map <std::string, sf::Texture*> texturas;
     bool paused;
     bool over;
+    float spawnInimVel; //tempo em segundos para surgir inimigos
+    int maxInimigos;
 
     Player heroi;
     Base base;
+    std::list <Inimigo*> inimigos;
     std::list <Tiro*> tiros;
 
     void initVars();
@@ -36,6 +39,7 @@ public:
     bool isRunning();
     void tratarEventos();
     void tratarTiros();
+    void tratarInimigos();
     void update();
     void render();
 };

@@ -17,7 +17,7 @@ Player::Player(){
 
     this->vida = 100;
     this->municao = 25;
-    this->velocidade = 5;
+    this->velocidade = 6;
     this->cadenciaAtaque = 1; //Segundos
     this->movendo = true;
     this->playerClock.restart();
@@ -28,37 +28,34 @@ Player::~Player(){
 
 //Funções
 void Player::mover(){
-    if (this->destino.y > 0 && this->destino.x > 0)
+    sf::Vector2f direcao = this->destino - this->posicaoCentro; //Vetor de direção ao ponto do click
+    
+    float comprimento = std::sqrt(direcao.x * direcao.x + direcao.y * direcao.y);
+    /*
+        Calcula a magnitude do vetor de direção (Teorema de Pitágoras)
+        - A magnitude do vetor é equivale à hipotenusa do triângulo formado pelos eixos do vetor
+    */
+
+    if (comprimento != 0) //Normalizando vetor direção para obter um vetor unitário
     {
-        sf::Vector2f direcao = this->destino - this->posicaoCentro; //Vetor de direção ao ponto do click
-        
-        float comprimento = std::sqrt(direcao.x * direcao.x + direcao.y * direcao.y);
-        /*
-            Calcula a magnitude do vetor de direção (Teorema de Pitágoras)
-            - A magnitude do vetor é equivale à hipotenusa do triângulo formado pelos eixos do vetor
-        */
-
-        if (comprimento != 0) //Normalizando vetor direção para obter um vetor unitário
-        {
-            direcao.x /= comprimento;
-            direcao.y /= comprimento;
-        }
-
-        sf::Vector2f movimento = direcao * this->velocidade;
-
-        //Verifica se o jogador deve continuar andando
-        if (std::sqrt(movimento.x * movimento.x + movimento.y * movimento.y) >= comprimento)
-        {
-            this->movendo = false;
-        } else {
-            this->movendo = true;
-        }
-
-        if (movendo)
-        {
-            this->sprite.move(movimento);
-        }   
+        direcao.x /= comprimento;
+        direcao.y /= comprimento;
     }
+
+    sf::Vector2f movimento = direcao * this->velocidade;
+
+    //Verifica se o jogador deve continuar andando
+    if (std::sqrt(movimento.x * movimento.x + movimento.y * movimento.y) >= comprimento)
+    {
+        this->movendo = false;
+    } else {
+        this->movendo = true;
+    }
+
+    if (movendo)
+    {
+        this->sprite.move(movimento);
+    }   
 }
 
 sf::Vector2f Player::getPosCentro(){
@@ -115,9 +112,12 @@ void Player::setCadAtaque(float tempo)
     this->cadenciaAtaque = tempo;
 }
 
-void Player::update(){
+void Player::update(sf::RenderTarget& tela){
     this->posicaoCentro = this->getPosCentro();
-    this->mover();
+    if (this->destino.y > 0 && this->destino.x > 0 && this->destino.x < tela.getSize().x && this->destino.y < tela.getSize().y)
+    {
+        this->mover();
+    }
 }
 
 void Player::render(sf::RenderTarget& tela){

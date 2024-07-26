@@ -4,8 +4,66 @@ Inimigo::Inimigo()
 {
 }
 
+Inimigo::Inimigo(sf::Texture *textura)
+{
+    this->sprite.setTexture(*textura);
+    this->sprite.scale(3.45,3.45);
+    this->sprite.setPosition(30.f,30.f);
+    this->vida = 10;
+    this->velocidade = 3;
+    this->distAtaque = 150;
+    this->safeDist = 300;
+    this->cadenciaAtaque = 2;
+    this->movendo = true;
+}
+
 Inimigo::~Inimigo()
 {
+}
+
+sf::Vector2f Inimigo::getPosCentro()
+{
+    /*
+        Calcula a posição do ponto central do sprite
+            *SFML não considera o centro do sprite como sendo as coordenadas da sua posição
+    */
+    sf::Vector2f spritePos = sprite.getPosition();
+    sf::FloatRect spriteDimensoes = sprite.getGlobalBounds();
+    sf::Vector2f centro(spritePos.x + spriteDimensoes.width / 2, spritePos.y + spriteDimensoes.height / 2);
+
+    return centro;
+}
+
+sf::FloatRect Inimigo::getBounds()
+{
+    return this->sprite.getGlobalBounds();
+}
+
+int Inimigo::getVida()
+{
+    return this->vida;
+}
+
+void Inimigo::moverIA()
+{
+    //Manter certa distancia do player
+    if (this->destino.x - this->posicaoCentro.x < 0)
+    {
+        this->destino.x += this->safeDist;
+    }
+    else
+    {
+        this->destino.x -= this->safeDist;
+    }
+
+    if (this->destino.y - this->posicaoCentro.y < 0)
+    {
+        this->destino.y += this->safeDist;
+    }
+    else
+    {
+        this->destino.y -= this->safeDist;
+    }
 }
 
 void Inimigo::mover()
@@ -40,9 +98,31 @@ void Inimigo::mover()
     }   
 }
 
+bool Inimigo::atacar()
+{
+    //Ataca de acordo com a cadencia de ataque e se o alvo estiver dentro do alcance
+    sf::Time dt = this->enemyClock.getElapsedTime();    
+    if (dt.asSeconds() >= this->cadenciaAtaque)
+    {   
+        if (this->destino.x - this->posicaoCentro.x <= this->distAtaque && this->destino.y - this->posicaoCentro.y <= this->distAtaque)
+        {
+            this->enemyClock.restart();
+            return true;          
+        }
+    }
+    return false;
+}
+
+void Inimigo::receberDano(int dano)
+{
+    this->vida -= dano;
+}
+
 void Inimigo::update(sf::Vector2f playerPos)
 {
+    this->posicaoCentro = this->getPosCentro();
     this->destino = playerPos;
+    this->moverIA();
     this->mover();
 }
 

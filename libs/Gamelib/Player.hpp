@@ -34,7 +34,7 @@ public:
     void setDestino(sf::Vector2f mouseClick);
     void receberDano(int dano);
     void mover();
-    void update();
+    void update(sf::RenderTarget& tela);
     void render(sf::RenderTarget& tela);
 };
 
