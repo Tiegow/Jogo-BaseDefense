@@ -21,6 +21,18 @@ sf::Vector2f getMouseCoords(sf::RenderWindow& janela){
     return mousePos; // Retorna o vetor coordenada do mouse em relação à janela do jogo
 }
 
+sf::Vector2f getPosCentro(sf::Sprite& sprite){
+    /*
+        Calcula a posição do ponto central do sprite
+            *SFML não considera o centro do sprite como sendo as coordenadas da sua posição
+    */
+    sf::Vector2f spritePos = sprite.getPosition();
+    sf::FloatRect spriteDimensoes = sprite.getGlobalBounds();
+    sf::Vector2f centro(spritePos.x + spriteDimensoes.width / 2, spritePos.y + spriteDimensoes.height / 2);
+
+    return centro;
+}
+
 void pause(sf::RenderTarget& target){ // "Desenha" a tela de pause
     target.clear(sf::Color::Black);
 

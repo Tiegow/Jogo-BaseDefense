@@ -4,11 +4,35 @@ Inimigo::Inimigo()
 {
 }
 
-Inimigo::Inimigo(sf::Texture *textura)
+Inimigo::Inimigo(sf::Texture *textura, sf::RenderTarget &tela)
 {
     this->sprite.setTexture(*textura);
     this->sprite.scale(3.45,3.45);
-    this->sprite.setPosition(30.f,30.f);
+
+    //Surgimento aleatorio do inimigo
+    int bordaRand = rand() % 4; 
+    switch (bordaRand) //Escolhendo uma das 4 bordas
+    {
+        case 0:
+            this->sprite.setPosition(rand() % tela.getSize().x, 0.f); //Superior (y = 0)
+            break;
+        
+        case 1:
+            this->sprite.setPosition(rand() % tela.getSize().x, tela.getSize().y); //Inferior (y = maximo)
+            break;
+        
+        case 2:
+            this->sprite.setPosition(0.f, rand() % tela.getSize().y); //Esquerda (x = 0)
+            break;
+
+        case 3:
+            this->sprite.setPosition(tela.getSize().x, rand() % tela.getSize().y); //Direita (x = maximo)
+            break;
+
+        default:
+            break;
+    }
+
     this->vida = 10;
     this->velocidade = 3;
     this->distAtaque = 150;
@@ -21,17 +45,9 @@ Inimigo::~Inimigo()
 {
 }
 
-sf::Vector2f Inimigo::getPosCentro()
+sf::Vector2f Inimigo::getCentro()
 {
-    /*
-        Calcula a posição do ponto central do sprite
-            *SFML não considera o centro do sprite como sendo as coordenadas da sua posição
-    */
-    sf::Vector2f spritePos = sprite.getPosition();
-    sf::FloatRect spriteDimensoes = sprite.getGlobalBounds();
-    sf::Vector2f centro(spritePos.x + spriteDimensoes.width / 2, spritePos.y + spriteDimensoes.height / 2);
-
-    return centro;
+    return this->posicaoCentro;
 }
 
 sf::FloatRect Inimigo::getBounds()
@@ -120,7 +136,7 @@ void Inimigo::receberDano(int dano)
 
 void Inimigo::update(sf::Vector2f playerPos)
 {
-    this->posicaoCentro = this->getPosCentro();
+    this->posicaoCentro = getPosCentro(this->sprite);
     this->destino = playerPos;
     this->moverIA();
     this->mover();

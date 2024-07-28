@@ -25,7 +25,7 @@ public:
     ~Player();
 
     //Funções
-    sf::Vector2f getPosCentro();
+    sf::Vector2f getCentro();
     sf::Vector2f getPos();
     sf::FloatRect getBounds();
     bool podeAtacar();

@@ -17,7 +17,7 @@ Player::Player(){
 
     this->vida = 100;
     this->municao = 25;
-    this->velocidade = 6;
+    this->velocidade = 4;
     this->cadenciaAtaque = 1; //Segundos
     this->movendo = true;
     this->playerClock.restart();
@@ -58,16 +58,8 @@ void Player::mover(){
     }   
 }
 
-sf::Vector2f Player::getPosCentro(){
-    /*
-        Calcula a posição do ponto central do sprite
-            *SFML não considera o centro do sprite como sendo as coordenadas da sua posição
-    */
-    sf::Vector2f spritePos = sprite.getPosition();
-    sf::FloatRect spriteDimensoes = sprite.getGlobalBounds();
-    sf::Vector2f centro(spritePos.x + spriteDimensoes.width / 2, spritePos.y + spriteDimensoes.height / 2);
-
-    return centro;
+sf::Vector2f Player::getCentro(){
+    return this->posicaoCentro;
 }
 
 sf::Vector2f Player::getPos()
@@ -113,7 +105,7 @@ void Player::setCadAtaque(float tempo)
 }
 
 void Player::update(sf::RenderTarget& tela){
-    this->posicaoCentro = this->getPosCentro();
+    this->posicaoCentro = getPosCentro(this->sprite);
     if (this->destino.y > 0 && this->destino.x > 0 && this->destino.x < tela.getSize().x && this->destino.y < tela.getSize().y)
     {
         this->mover();

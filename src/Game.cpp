@@ -6,8 +6,8 @@ void Game::initVars(){
     this->janela = nullptr;
     this->paused = false;
     this->over = false;
-    this->spawnInimVel = 3;
-    this->maxInimigos = 3;
+    this->spawnInimVel = 4;
+    this->maxInimigos = 5;
     this->clock.restart();
 }
 
@@ -100,7 +100,7 @@ void Game::tratarEventos(){
                 //Q
                     if(this->evento.key.code == sf::Keyboard::Q && this->heroi.podeAtacar()){
                         this->mousePos = getMouseCoords(*this->janela);
-                        this->tiros.push_back(new Tiro(this->texturas["TIRO"], this->heroi.getPosCentro(), mousePos, false));
+                        this->tiros.push_back(new Tiro(this->texturas["TIRO"], this->heroi.getCentro(), mousePos, false));
                     }
                     break;
             
@@ -177,18 +177,18 @@ void Game::tratarInimigos()
         if (this->inimigos.size() < this->maxInimigos)
         {
             this->clock.restart();
-            this->inimigos.push_back(new Inimigo(this->texturas["INIMIGO1"]));
+            this->inimigos.push_back(new Inimigo(this->texturas["INIMIGO1"], *this->janela));
         }
     }
 
     std::list<Inimigo*>::iterator contador = this->inimigos.begin();
     for (auto *inimigo : this->inimigos)
     {
-        inimigo->update(this->heroi.getPosCentro());
+        inimigo->update(this->heroi.getCentro());
 
         if (inimigo->atacar())
         {
-            this->tiros.push_back(new Tiro(this->texturas["TIRO"], inimigo->getPosCentro(), this->heroi.getPosCentro(), true));
+            this->tiros.push_back(new Tiro(this->texturas["TIRO"], inimigo->getCentro(), this->heroi.getCentro(), true));
         }
 
         //Removendo ao morrer

@@ -1,6 +1,7 @@
 #ifndef INIMIGO_HPP
 #define INIMIGO_HPP
 
+#include <stdlib.h>
 #include "GameInterfaces.hpp"
 
 class Inimigo
@@ -12,18 +13,18 @@ private:
     sf::Sprite sprite;
 
     int vida;
-    int distAtaque; //Distancia máxima em que o inimigo pode atacar o jogador
-    int safeDist;
     float velocidade;
     float cadenciaAtaque; //Tempo entre um ataque e outro em segundos
+    int distAtaque; //Distancia máxima em que o inimigo pode atacar o jogador
     bool movendo;
+    int safeDist;
 public:
     Inimigo();
-    Inimigo(sf::Texture* textura);
+    Inimigo(sf::Texture* textura, sf::RenderTarget &tela);
     ~Inimigo();
 
     //Funções
-    sf::Vector2f getPosCentro();
+    sf::Vector2f getCentro();
     sf::FloatRect getBounds();
     int getVida();
     void moverIA();
