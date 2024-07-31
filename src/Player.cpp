@@ -15,10 +15,6 @@ Player::Player(){
     this->initTextura();
     this->initSprite();
 
-    this->vida = 100;
-    this->municao = 25;
-    this->velocidade = 4;
-    this->cadenciaAtaque = 1; //Segundos
     this->movendo = true;
     this->playerClock.restart();
 }
@@ -41,7 +37,7 @@ void Player::mover(){
         direcao.y /= comprimento;
     }
 
-    sf::Vector2f movimento = direcao * this->velocidade;
+    sf::Vector2f movimento = direcao * this->playerStats.velocidadePlayer;
 
     //Verifica se o jogador deve continuar andando
     if (std::sqrt(movimento.x * movimento.x + movimento.y * movimento.y) >= comprimento)
@@ -75,9 +71,9 @@ sf::FloatRect Player::getBounds()
 bool Player::podeAtacar()
 {
     sf::Time dt = this->playerClock.getElapsedTime();
-    if (dt.asSeconds() >= this->cadenciaAtaque)
+    if (dt.asSeconds() >= this->playerStats.cadenciaAtaquePlayer)
     {
-        if (this->municao > 0)
+        if (this->playerStats.municaoPlayer > 0)
         {
             this->playerClock.restart();
             return true;
@@ -89,22 +85,32 @@ bool Player::podeAtacar()
 
 float Player::getCadAtaque()
 {
-    return this->cadenciaAtaque;
+    return this->playerStats.cadenciaAtaquePlayer;
 }
 
 int Player::getVida()
 {
-    return this->vida;
+    return this->playerStats.vidaPlayer;
 }
 
 int Player::getMun()
 {
-    return this->municao;
+    return this->playerStats.municaoPlayer;
+}
+
+void Player::upgradeVida()
+{
+    this->playerStats.vidaPlayer = this->playerStats.statsUpgradeVida();
+}
+
+void Player::resetPlayer()
+{
+    this->playerStats.statsReset();
 }
 
 void Player::updateMun()
 {
-    this->municao--;
+    this->playerStats.municaoPlayer--;
 }
 
 void Player::setDestino(sf::Vector2f mouseClick)
@@ -114,12 +120,12 @@ void Player::setDestino(sf::Vector2f mouseClick)
 
 void Player::receberDano(int dano)
 {
-    this->vida -= dano;
+    this->playerStats.vidaPlayer -= dano;
 }
 
 void Player::setCadAtaque(float tempo)
 {
-    this->cadenciaAtaque = tempo;
+    this->playerStats.cadenciaAtaquePlayer = tempo;
 }
 
 void Player::update(sf::RenderTarget& tela){

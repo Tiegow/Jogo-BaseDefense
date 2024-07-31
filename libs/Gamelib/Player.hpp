@@ -2,6 +2,7 @@
 #define PLAYER_HPP
 
 #include "GameInterfaces.hpp"
+#include "GameLevelStats.hpp"
 
 class Player
 {
@@ -12,10 +13,7 @@ private:
     sf::Sprite sprite;
     sf::Texture textura;
 
-    int vida;
-    int municao;
-    float velocidade;
-    float cadenciaAtaque; //Tempo entre um ataque e outro em segundos
+    PlayerLevelStats playerStats;
     bool movendo;
 
     void initTextura();
@@ -29,10 +27,15 @@ public:
     sf::Vector2f getCentro();
     sf::Vector2f getPos();
     sf::FloatRect getBounds();
+
     bool podeAtacar();
     float getCadAtaque();
     int getVida();
     int getMun();
+    
+    void upgradeVida();
+    void resetPlayer();
+
     void updateMun();
     void setCadAtaque(float tempo);
     void setDestino(sf::Vector2f mouseClick);

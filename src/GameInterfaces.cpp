@@ -1,4 +1,5 @@
 #include "GameInterfaces.hpp"
+#include <iostream>
 
 sf::Vector2f centrObjeto(sf::Vector2u tamJanela, sf::Vector2f tamObj){
     /*
@@ -47,3 +48,13 @@ sf::Vector2f getPosCentro(sf::Sprite& sprite){
     return centro;
 }
 
+bool botaoPres(sf::RenderWindow &janela, sf::FloatRect botaoBounds)
+{
+    sf::Vector2f mousePosit = getMouseCoords(janela);
+    if (botaoBounds.contains(mousePosit))
+    {
+        return true;
+    }
+        
+    return false;
+}

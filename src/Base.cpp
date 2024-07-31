@@ -5,10 +5,8 @@ Base::Base()
 {
     this->vida = 100;
     this->maxVida = 100;
-    this->resistencia = 0;
     this->corVida = 0;
-    this->autoCura = 2;
-    this->velCura = 1;
+
     this->baseBody.setSize(sf::Vector2f(500.f,300.f));
     this->baseBody.setOutlineColor(sf::Color::Red);
     this->baseBody.setOutlineThickness(15.f);
@@ -21,7 +19,7 @@ Base::~Base()
 
 void Base::curar()
 {
-    this->vida += this->autoCura;
+    this->vida += this->stats.autoCuraBase;
 }
 
 void Base::curar(int cura)
@@ -56,8 +54,14 @@ bool Base::destruida()
 void Base::receberDano(int dano){
     if (this->vida > 0) 
     {
-        this->vida -= (dano - this->resistencia);
+        this->vida -= (dano - this->stats.resistenciaBase);
     }
+}
+
+void Base::resetBase()
+{
+    this->stats.statsReset();
+    this->vida = maxVida;
 }
 
 void Base::update(){ 
@@ -67,7 +71,7 @@ void Base::update(){
 
     //Cura automatica
     sf::Time dt = this->baseClock.getElapsedTime();
-    if (dt.asSeconds() >= this->velCura)
+    if (dt.asSeconds() >= this->stats.velCuraBase)
     {
         if (this->vida < this->maxVida)
         {

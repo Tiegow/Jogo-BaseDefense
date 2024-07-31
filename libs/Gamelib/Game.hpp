@@ -4,6 +4,7 @@
 #include <map>
 #include <list>
 #include <string>
+#include "GameLevelStats.hpp"
 #include "Base.hpp"
 #include "Player.hpp"
 #include "Inimigo.hpp"
@@ -13,6 +14,9 @@
 class Game
 {
 private:
+    GameLevelStats stats;
+    BaseLevelStats baseStats;
+
     sf::Clock clock;
     sf::VideoMode videoMode; //especificações da janela
     sf::Event evento;
@@ -20,13 +24,8 @@ private:
     std::map <std::string, sf::Texture*> texturas;
     
     //VARS
-    unsigned gameLevel;
     bool paused;
     bool over;
-    float spawnInimVel; //tempo em segundos para surgir inimigos
-    int maxInimigos;
-    float chancesDropMun; //chance de inimigos deixarem munições no jogo
-    float chancesDropVida; //chance de inimigos deixarem curas no jogo
 
     Player heroi;
     Base base;
@@ -48,6 +47,7 @@ public:
 
     //Funções
     bool isRunning();
+    void limparGame();
     void tratarEventos();
     void tratarTiros();
     void tratarInimigos();

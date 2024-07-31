@@ -4,14 +4,9 @@
 //Funções private
 void Game::initVars(){
     this->janela = nullptr;
-    this->gameLevel = 1;
     this->paused = false;
     this->over = false;
-    this->chancesDropMun = 0.36; //(x * 100)%
-    this->chancesDropVida = 0.2; //(x * 100)%
 
-    this->spawnInimVel = 4;
-    this->maxInimigos = 5;
     this->clock.restart();
 }
 
@@ -67,6 +62,19 @@ void Game::renderPause()
     botPos = centrObjeto(this->janela->getSize(), sairBot.getGlobalBounds());
     sairBot.setPosition(botPos.x, botPos.y + 300.f);
 
+    //Mouse
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        if (botaoPres(*this->janela, contBot.getGlobalBounds()))
+        {
+            this->paused = false;
+        }
+        if (botaoPres(*this->janela, sairBot.getGlobalBounds()))
+        {
+            this->janela->close();
+        }
+    }
+
     this->janela->clear(sf::Color(23,21,35,255));
     this->janela->draw(pauseText);
     this->janela->draw(contBot);
@@ -96,6 +104,26 @@ void Game::renderOver()
     botPos = centrObjeto(this->janela->getSize(), sairBot.getGlobalBounds());
     sairBot.setPosition(botPos.x, botPos.y + 300.f);
 
+    //Mouse
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        if (botaoPres(*this->janela, contBot.getGlobalBounds()))
+        {
+            this->stats.statsReset();
+            this->heroi.resetPlayer();
+            this->base.resetBase();
+
+            this->limparGame();
+
+            this->clock.restart();
+            this->over = false;
+        }
+        if (botaoPres(*this->janela, sairBot.getGlobalBounds()))
+        {
+            this->janela->close();
+        }
+    }
+
     this->janela->clear(sf::Color(22,9,9,255));
     this->janela->draw(overText);
     this->janela->draw(contBot);
@@ -121,17 +149,7 @@ Game::~Game(){
         textura.second = nullptr;
     }
 
-    //Itera sobre a list tiros para deletar os ponteiros pra Tiro
-    for(auto *tiro : this->tiros){
-        delete tiro;
-        tiro = nullptr;
-    }
-
-    //Itera sobre a list inimigos para deletar os ponteiros pra Inimigo
-    for(auto *inim : this->inimigos){
-        delete inim;
-        inim = nullptr;
-    }
+    this->limparGame();
 }
 //----------------------------------------//
 
@@ -162,6 +180,7 @@ void Game::tratarEventos(){
             default:
                 break;
         }
+
         //Eventos do jogo
         if (!this->paused && !this->over)
         {
@@ -188,6 +207,23 @@ void Game::tratarEventos(){
             }
         }
     }
+}
+
+void Game::limparGame()
+{
+    //Itera sobre a list tiros para deletar os ponteiros pra Tiro
+    for(auto *tiro : this->tiros){
+        delete tiro;
+        tiro = nullptr;
+    }
+    this->tiros.clear();
+
+    //Itera sobre a list inimigos para deletar os ponteiros pra Inimigo
+    for(auto *inim : this->inimigos){
+        delete inim;
+        inim = nullptr;
+    }
+    this->inimigos.clear();
 }
 
 void Game::tratarTiros(){
@@ -243,9 +279,9 @@ void Game::tratarInimigos()
 {
     //Spawnando inimigo
     sf::Time dt = this->clock.getElapsedTime();
-    if (dt.asSeconds() >= this->spawnInimVel)
+    if (dt.asSeconds() >= this->stats.inimSpawnVel)
     {
-        if (this->inimigos.size() < this->maxInimigos)
+        if (this->inimigos.size() < this->stats.maxInim)
         {
             this->clock.restart();
             this->inimigos.push_back(new Inimigo(this->texturas["INIMIGO1"], *this->janela));
@@ -265,12 +301,12 @@ void Game::tratarInimigos()
         //Removendo ao morrer
         if (inimigo->getVida() <= 0)
         {
-            if (static_cast<double>(rand()) / RAND_MAX < this->chancesDropMun)
+            if (static_cast<double>(rand()) / RAND_MAX < this->stats.chancesDropMun)
             {
                 std::cout << " Dropando caixa \n";
             }
 
-            if (static_cast<double>(rand()) / RAND_MAX < this->chancesDropVida)
+            if (static_cast<double>(rand()) / RAND_MAX < this->stats.chancesDropVida)
             {
                 std::cout << " Dropando Vida \n";
             }
@@ -311,7 +347,6 @@ void Game::update(){
     }
     else
     {
-        // gameOver(*this->janela);
         this->renderOver();
     }
     
@@ -333,7 +368,6 @@ void Game::render(){
             tiro->render(*this->janela);
         }
 
-        // this->janela->draw(this->vidaTxt);
         this->GUI.render(*this->janela);
     }
     this->janela->display();

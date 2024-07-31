@@ -2,16 +2,16 @@
 #define BASE_HPP
 
 #include "GameInterfaces.hpp"
+#include "GameLevelStats.hpp"
 
 class Base
 {
 private:
     sf::Clock baseClock;
-    int velCura; //Tempo em segundos entre as curas automaticas da base
-    int autoCura; //Quantidade de vida que a base recupera a cada cura automatica
+
+    BaseLevelStats stats;
     int vida;
     int maxVida;
-    int resistencia; //Reduz o dano sofrido pela base
     int corVida;
 
     void curar(); //Cura automatica
@@ -22,11 +22,14 @@ public:
     ~Base();
 
     //Funções
-    void curar(int cura);
     int getVida();
-    void spawn(sf::RenderTarget& tela);
     bool destruida();
-    void receberDano(int dano);    
+    void spawn(sf::RenderTarget& tela);
+    void curar(int cura);
+    void receberDano(int dano);   
+
+    void resetBase();
+
     void update();
     void render(sf::RenderTarget& tela);
 };

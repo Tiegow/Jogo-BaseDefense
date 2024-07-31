@@ -10,5 +10,6 @@ sf::Vector2f getMouseCoords(sf::RenderWindow& janela);
 sf::Vector2f getPosCentro(sf::Sprite& sprite);
 void pause(sf::RenderTarget& target, sf::Font& font);
 void gameOver(sf::RenderTarget& target);
+bool botaoPres(sf::RenderWindow& janela, sf::FloatRect sprite);
 
 #endif
