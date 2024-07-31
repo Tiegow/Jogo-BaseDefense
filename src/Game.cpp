@@ -6,8 +6,7 @@ void Game::initVars(){
     this->janela = nullptr;
     this->paused = false;
     this->over = false;
-
-    this->clock.restart();
+    this->tempo = this->stats.tempoLevel;
 }
 
 void Game::initTexturas(){
@@ -115,7 +114,7 @@ void Game::renderOver()
 
             this->limparGame();
 
-            this->clock.restart();
+            this->tempo = this->stats.tempoLevel;
             this->over = false;
         }
         if (botaoPres(*this->janela, sairBot.getGlobalBounds()))
@@ -137,6 +136,7 @@ Game::Game(){
     this->initJanela();
     this->initTexturas();
     this->base.spawn(*this->janela);
+    this->heroi.setPos(centrObjeto(this->janela->getSize(), this->heroi.getBounds()));
 }
 
 Game::~Game(){
@@ -224,6 +224,16 @@ void Game::limparGame()
         inim = nullptr;
     }
     this->inimigos.clear();
+
+    this->spawnClock.restart();
+    this->levelClock.restart();
+}
+
+void Game::proximaFase()
+{
+    this->limparGame();
+    this->stats.statsNext();
+    this->tempo = this->stats.tempoLevel;
 }
 
 void Game::tratarTiros(){
@@ -278,12 +288,12 @@ void Game::tratarTiros(){
 void Game::tratarInimigos()
 {
     //Spawnando inimigo
-    sf::Time dt = this->clock.getElapsedTime();
+    sf::Time dt = this->spawnClock.getElapsedTime();
     if (dt.asSeconds() >= this->stats.inimSpawnVel)
     {
         if (this->inimigos.size() < this->stats.maxInim)
         {
-            this->clock.restart();
+            this->spawnClock.restart();
             this->inimigos.push_back(new Inimigo(this->texturas["INIMIGO1"], *this->janela));
         }
     }
@@ -321,6 +331,17 @@ void Game::tratarInimigos()
 }
 
 void Game::update(){
+    sf::Time dt = this->levelClock.getElapsedTime();
+    this->tempo = this->stats.tempoLevel - dt.asSeconds();
+    
+    if (dt.asSeconds() >= this->stats.tempoLevel)
+    {
+        std::cout << "Passou de fase \n";
+        this->levelClock.restart();
+        this->proximaFase();
+    }
+    
+
     if (this->base.getVida() <= 0 || this->heroi.getVida() <= 0)
     {
         this->over = true;
@@ -342,7 +363,7 @@ void Game::update(){
             this->heroi.update(*this->janela);
             this->tratarInimigos();
             this->tratarTiros();
-            this->GUI.update(this->heroi.getVida(), this->heroi.getMun());
+            this->GUI.update(this->heroi.getVida(), this->heroi.getMun(), this->stats.level, this->tempo);
         }
     }
     else

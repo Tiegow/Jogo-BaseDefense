@@ -8,7 +8,6 @@ void Player::initTextura(){
 void Player::initSprite(){
     this->sprite.setTexture(this->textura); //Define a textura do sprite
     this->sprite.scale(3.45,3.45);
-    this->sprite.setPosition(30.f,30.f);
 }
 
 Player::Player(){
@@ -116,6 +115,11 @@ void Player::updateMun()
 void Player::setDestino(sf::Vector2f mouseClick)
 {
     this->destino = mouseClick;
+}
+
+void Player::setPos(sf::Vector2f posicao)
+{
+    this->sprite.setPosition(posicao);
 }
 
 void Player::receberDano(int dano)

@@ -5,6 +5,7 @@ struct GameLevelStats
 {
     //Fase
     unsigned level = 1;
+    float tempoLevel = 30; //tempo em segundos para passar de nivel
     float inimSpawnVel = 4; //tempo em segundos para surgir inimigos
     int maxInim = 5;
     float chancesDropMun = 0.36; //chance de inimigos deixarem munições no jogo

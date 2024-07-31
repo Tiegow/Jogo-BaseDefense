@@ -3,34 +3,38 @@
 
 GameGUI::GameGUI()
 {
+    this->margin = 30.f;
     this->font.loadFromFile("./assets/Simply Rounded.ttf");
     
-    this->vidaTxt.setFont(this->font);
-    this->vidaTxt.setCharacterSize(37);
-    this->vidaTxt.setFillColor(sf::Color::Black);
-    this->vidaTxt.setString("Teste");
+    this->statsTxt.setFont(this->font);
+    this->statsTxt.setCharacterSize(37);
+    this->statsTxt.setFillColor(sf::Color::Black);
 
-    this->munTxt.setFont(this->font);
-    this->munTxt.setCharacterSize(37);
-    this->munTxt.setFillColor(sf::Color::Black);
-    this->munTxt.setString("Teste");
+    this->faseTxt.setFont(this->font);
+    this->faseTxt.setCharacterSize(37);
+    this->faseTxt.setFillColor(sf::Color::Black);
 }
 
 GameGUI::~GameGUI()
 {
 }
 
-void GameGUI::update(int vida, int municao)
+void GameGUI::update(int vida, int municao, int fase, int tempo)
 {
-    std::stringstream strGUI;
-    strGUI << "Vida: " << vida;
-    this->vidaTxt.setString(strGUI.str());
-    strGUI << "Municao: " << municao;
-    this->munTxt.setString(strGUI.str());
+    std::stringstream strStatsGUI;
+    strStatsGUI << "Vida: " << vida << "\nMunicao: " << municao ;
+    this->statsTxt.setString(strStatsGUI.str());
+
+    std::stringstream strLevelGUI;
+    strLevelGUI << "Fase: " << fase << "\n" << tempo << " s";
+    this->faseTxt.setString(strLevelGUI.str());
 }
 
 void GameGUI::render(sf::RenderTarget &target)
 {
-    target.draw(this->vidaTxt);
-    target.draw(this->munTxt);
+    float textPos = target.getSize().x - this->faseTxt.getGlobalBounds().width - this->margin;
+    this->faseTxt.setPosition(textPos, this->margin);
+    this->statsTxt.setPosition(this->margin, this->margin);
+    target.draw(this->statsTxt);
+    target.draw(this->faseTxt);
 }

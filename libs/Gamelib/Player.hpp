@@ -39,6 +39,7 @@ public:
     void updateMun();
     void setCadAtaque(float tempo);
     void setDestino(sf::Vector2f mouseClick);
+    void setPos(sf::Vector2f posicao);
     void receberDano(int dano);
     void update(sf::RenderTarget& tela);
     void render(sf::RenderTarget& tela);

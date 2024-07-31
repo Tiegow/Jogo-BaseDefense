@@ -4,6 +4,7 @@
 void GameLevelStats::statsNext()
 {
     this->level++;
+    this->tempoLevel += 20; //Aumenta o tempo para sobreviver a fase
     this->inimSpawnVel -= 0.2; //Reduz o tempo para surgir inimigos
     this->maxInim++; //Aumenta a quantidade maxima de inimigos
 
@@ -21,6 +22,7 @@ void GameLevelStats::statsNext()
 void GameLevelStats::statsReset()
 {
     this->level = 1;
+    this->tempoLevel = 30;
     this->inimSpawnVel = 4;
     this->maxInim = 5;
     this->chancesDropMun = 0.36;

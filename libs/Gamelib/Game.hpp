@@ -17,7 +17,8 @@ private:
     GameLevelStats stats;
     BaseLevelStats baseStats;
 
-    sf::Clock clock;
+    sf::Clock spawnClock;
+    sf::Clock levelClock;
     sf::VideoMode videoMode; //especificações da janela
     sf::Event evento;
     sf::Vector2f mousePos; //coordenada do mouse na janela
@@ -26,6 +27,7 @@ private:
     //VARS
     bool paused;
     bool over;
+    int tempo; //tempo restante ate a proxima fase
 
     Player heroi;
     Base base;
@@ -48,6 +50,7 @@ public:
     //Funções
     bool isRunning();
     void limparGame();
+    void proximaFase();
     void tratarEventos();
     void tratarTiros();
     void tratarInimigos();

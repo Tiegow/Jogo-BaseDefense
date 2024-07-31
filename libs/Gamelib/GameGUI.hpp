@@ -8,13 +8,15 @@ class GameGUI
 {
 private:
     sf::Font font;
-    sf::Text vidaTxt;
-    sf::Text munTxt;
+    sf::Text statsTxt;
+    sf::Text faseTxt;
+
+    float margin;
 public:
     GameGUI(/* args */);
     ~GameGUI();
 
-    void update(int vida, int municao);
+    void update(int vida, int municao, int fase, int tempo);
     void render(sf::RenderTarget& target);
 };
 
