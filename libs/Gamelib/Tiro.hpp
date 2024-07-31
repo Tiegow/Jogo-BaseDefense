@@ -8,10 +8,13 @@ class Tiro
 private:
     sf::Sprite sprite;
     sf::Vector2f direcao;
+    
     float velocidade;
     int dano;
     bool hit;
     bool inimigo;
+
+    void mover();
 public:
     Tiro();
     Tiro(sf::Texture* textura, sf::Vector2f posicao, sf::Vector2f dir, bool inimigo);
@@ -22,7 +25,6 @@ public:
     bool atingido();
     bool isEnemy();
     void setDirecao(sf::Vector2f mouseClick);
-    void mover();
     void update();
     void render(sf::RenderTarget& tela);
 };

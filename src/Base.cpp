@@ -5,6 +5,7 @@ Base::Base()
 {
     this->vida = 100;
     this->maxVida = 100;
+    this->resistencia = 0;
     this->corVida = 0;
     this->autoCura = 2;
     this->velCura = 1;
@@ -18,14 +19,14 @@ Base::~Base()
 {
 }
 
-void Base::curar(int cura)
-{
-    this->vida += cura;
-}
-
 void Base::curar()
 {
     this->vida += this->autoCura;
+}
+
+void Base::curar(int cura)
+{
+    this->vida += cura;
 }
 
 int Base::getVida()
@@ -55,7 +56,7 @@ bool Base::destruida()
 void Base::receberDano(int dano){
     if (this->vida > 0) 
     {
-        this->vida -= dano;
+        this->vida -= (dano - this->resistencia);
     }
 }
 

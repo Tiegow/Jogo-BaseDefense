@@ -20,6 +20,7 @@ private:
 
     void initTextura();
     void initSprite();
+    void mover();
 public:
     Player();
     ~Player();
@@ -30,10 +31,12 @@ public:
     sf::FloatRect getBounds();
     bool podeAtacar();
     float getCadAtaque();
+    int getVida();
+    int getMun();
+    void updateMun();
     void setCadAtaque(float tempo);
     void setDestino(sf::Vector2f mouseClick);
     void receberDano(int dano);
-    void mover();
     void update(sf::RenderTarget& tela);
     void render(sf::RenderTarget& tela);
 };

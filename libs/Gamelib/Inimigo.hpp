@@ -7,7 +7,8 @@
 class Inimigo
 {
 private:
-    sf::Clock enemyClock;
+    sf::Clock atackClock;
+    sf::Clock positionClock;
     sf::Vector2f destino;
     sf::Vector2f posicaoCentro;
     sf::Sprite sprite;
@@ -17,7 +18,12 @@ private:
     float cadenciaAtaque; //Tempo entre um ataque e outro em segundos
     int distAtaque; //Distancia máxima em que o inimigo pode atacar o jogador
     bool movendo;
+    bool fora;
     int safeDist;
+
+    void moverIA();
+    void mover();
+    void foraTela(sf::RenderTarget &tela); //Verifica se o inimigo esta muito tempo fora da tela
 public:
     Inimigo();
     Inimigo(sf::Texture* textura, sf::RenderTarget &tela);
@@ -27,11 +33,9 @@ public:
     sf::Vector2f getCentro();
     sf::FloatRect getBounds();
     int getVida();
-    void moverIA();
-    void mover();
     bool atacar();
     void receberDano(int dano);
-    void update(sf::Vector2f playerPos);
+    void update(sf::Vector2f playerPos, sf::RenderTarget &tela);
     void render(sf::RenderTarget& tela);
 };
 

@@ -14,6 +14,20 @@ sf::Vector2f centrObjeto(sf::Vector2u tamJanela, sf::Vector2f tamObj){
     return posicaoObj;
 }
 
+sf::Vector2f centrObjeto(sf::Vector2u tamJanela, sf::FloatRect objBounds){
+    /*
+        - Recebe tamanho da janela
+        - Recebe as extremidades do objeto
+
+        Retorna o vetor com a posição necessária para centralizar um objeto na tela
+    */
+    sf::Vector2f posicaoObj;
+    posicaoObj.x = (tamJanela.x - objBounds.width) / 2;
+    posicaoObj.y = (tamJanela.y - objBounds.height) / 2;
+
+    return posicaoObj;
+}
+
 sf::Vector2f getMouseCoords(sf::RenderWindow& janela){
     sf::Vector2i mouseWindow = sf::Mouse::getPosition(janela);
     sf::Vector2f mousePos = janela.mapPixelToCoords(mouseWindow);
@@ -31,31 +45,5 @@ sf::Vector2f getPosCentro(sf::Sprite& sprite){
     sf::Vector2f centro(spritePos.x + spriteDimensoes.width / 2, spritePos.y + spriteDimensoes.height / 2);
 
     return centro;
-}
-
-void pause(sf::RenderTarget& target){ // "Desenha" a tela de pause
-    target.clear(sf::Color::Black);
-
-    sf::RectangleShape botao;
-    botao.setFillColor(sf::Color::Blue);
-    botao.setSize(sf::Vector2f(400.f,200.f));
-
-    sf::Vector2f botaoPos = centrObjeto(target.getSize(), botao.getSize());
-    botao.setPosition(botaoPos);
-
-    target.draw(botao);
-}
-
-void gameOver(sf::RenderTarget& target){ // "Desenha" a tela de fim de jogo
-    target.clear(sf::Color::Black);
-
-    sf::RectangleShape botao;
-    botao.setFillColor(sf::Color::Red);
-    botao.setSize(sf::Vector2f(400.f,200.f));
-
-    sf::Vector2f botaoPos = centrObjeto(target.getSize(), botao.getSize());
-    botao.setPosition(botaoPos);
-
-    target.draw(botao);
 }
 

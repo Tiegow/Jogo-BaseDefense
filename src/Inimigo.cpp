@@ -1,4 +1,6 @@
 #include "Inimigo.hpp"
+#include <time.h>
+#include <iostream>
 
 Inimigo::Inimigo()
 {
@@ -10,7 +12,8 @@ Inimigo::Inimigo(sf::Texture *textura, sf::RenderTarget &tela)
     this->sprite.scale(3.45,3.45);
 
     //Surgimento aleatorio do inimigo
-    int bordaRand = rand() % 4; 
+    srand(time(0));
+    int bordaRand = rand() % 4; //Um numero de 0 a 3;
     switch (bordaRand) //Escolhendo uma das 4 bordas
     {
         case 0:
@@ -37,27 +40,13 @@ Inimigo::Inimigo(sf::Texture *textura, sf::RenderTarget &tela)
     this->velocidade = 3;
     this->distAtaque = 150;
     this->safeDist = 300;
-    this->cadenciaAtaque = 2;
+    this->cadenciaAtaque = 2; //segundos
     this->movendo = true;
+    this->fora = false;
 }
 
 Inimigo::~Inimigo()
 {
-}
-
-sf::Vector2f Inimigo::getCentro()
-{
-    return this->posicaoCentro;
-}
-
-sf::FloatRect Inimigo::getBounds()
-{
-    return this->sprite.getGlobalBounds();
-}
-
-int Inimigo::getVida()
-{
-    return this->vida;
 }
 
 void Inimigo::moverIA()
@@ -114,15 +103,67 @@ void Inimigo::mover()
     }   
 }
 
+void Inimigo::foraTela(sf::RenderTarget &tela)
+{
+    /*
+        Verifica se o inimigo esta muito tempo fora da tela por algum motivo
+            - Quando o inimigo é expulso pelas laterais do mapa, ele volta por cima
+            - Quando o inimigo é expulso por cima ou por baixo, ele volta pela esquerda
+    */
+    if (!this->fora)
+    {
+        this->positionClock.restart();
+    }
+    
+    if (this->posicaoCentro.x > tela.getSize().x || this->posicaoCentro.x < 0)
+    {   
+        this->fora = true;
+        sf::Time dt = this->positionClock.getElapsedTime();
+        if (dt.asSeconds() >= 4) //4 segundos fora da tela
+        {
+            this->positionClock.restart();
+            this->sprite.setPosition(rand() % tela.getSize().x, 0.f);
+            this->fora = false;
+        }
+    }
+    else if (this->posicaoCentro.y > tela.getSize().y || this->posicaoCentro.y < 0)
+    {   
+        this->fora = true;
+        sf::Time dt = this->positionClock.getElapsedTime();
+        if (dt.asSeconds() >= 4) //4 segundos fora da tela
+        {
+            this->positionClock.restart();
+            this->sprite.setPosition(0.f, rand() % tela.getSize().y);
+            this->fora = false;
+        }
+    }
+    else this->fora = false;
+}
+
+sf::Vector2f Inimigo::getCentro()
+{
+    return this->posicaoCentro;
+}
+
+sf::FloatRect Inimigo::getBounds()
+{
+    return this->sprite.getGlobalBounds();
+}
+
+int Inimigo::getVida()
+{
+    return this->vida;
+}
+
 bool Inimigo::atacar()
 {
     //Ataca de acordo com a cadencia de ataque e se o alvo estiver dentro do alcance
-    sf::Time dt = this->enemyClock.getElapsedTime();    
+    sf::Time dt = this->atackClock.getElapsedTime();    
     if (dt.asSeconds() >= this->cadenciaAtaque)
     {   
         if (this->destino.x - this->posicaoCentro.x <= this->distAtaque && this->destino.y - this->posicaoCentro.y <= this->distAtaque)
         {
-            this->enemyClock.restart();
+            this->atackClock.restart();
             return true;          
         }
     }
@@ -134,12 +175,13 @@ void Inimigo::receberDano(int dano)
     this->vida -= dano;
 }
 
-void Inimigo::update(sf::Vector2f playerPos)
+void Inimigo::update(sf::Vector2f playerPos, sf::RenderTarget &tela)
 {
     this->posicaoCentro = getPosCentro(this->sprite);
     this->destino = playerPos;
     this->moverIA();
     this->mover();
+    this->foraTela(tela);
 }
 
 void Inimigo::render(sf::RenderTarget &tela)

@@ -11,7 +11,10 @@ private:
     int autoCura; //Quantidade de vida que a base recupera a cada cura automatica
     int vida;
     int maxVida;
+    int resistencia; //Reduz o dano sofrido pela base
     int corVida;
+
+    void curar(); //Cura automatica
 public:
     sf::RectangleShape baseBody;
     
@@ -20,7 +23,6 @@ public:
 
     //Funções
     void curar(int cura);
-    void curar(); //Cura automatica
     int getVida();
     void spawn(sf::RenderTarget& tela);
     bool destruida();

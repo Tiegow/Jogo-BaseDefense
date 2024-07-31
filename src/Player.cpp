@@ -26,7 +26,6 @@ Player::~Player(){
 
 }
 
-//Funções
 void Player::mover(){
     sf::Vector2f direcao = this->destino - this->posicaoCentro; //Vetor de direção ao ponto do click
     
@@ -58,6 +57,7 @@ void Player::mover(){
     }   
 }
 
+//Funções
 sf::Vector2f Player::getCentro(){
     return this->posicaoCentro;
 }
@@ -77,8 +77,11 @@ bool Player::podeAtacar()
     sf::Time dt = this->playerClock.getElapsedTime();
     if (dt.asSeconds() >= this->cadenciaAtaque)
     {
-        this->playerClock.restart();
-        return true;
+        if (this->municao > 0)
+        {
+            this->playerClock.restart();
+            return true;
+        }
     }
     
     return false;
@@ -87,6 +90,21 @@ bool Player::podeAtacar()
 float Player::getCadAtaque()
 {
     return this->cadenciaAtaque;
+}
+
+int Player::getVida()
+{
+    return this->vida;
+}
+
+int Player::getMun()
+{
+    return this->municao;
+}
+
+void Player::updateMun()
+{
+    this->municao--;
 }
 
 void Player::setDestino(sf::Vector2f mouseClick)
