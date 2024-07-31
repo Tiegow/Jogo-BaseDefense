@@ -22,11 +22,12 @@ struct PlayerLevelStats
     unsigned cadLevel = 1;
 
     int vidaPlayer = 100;
+    int vidaMaxima = 100;
     int municaoPlayer = 25;
     float velocidadePlayer = 4;
     float cadenciaAtaquePlayer = 1; //Tempo entre um ataque e outro em segundos
     
-    int statsUpgradeVida();
+    void statsUpgradeVida();
     void statsReset();
 };
 

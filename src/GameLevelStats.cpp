@@ -29,11 +29,12 @@ void GameLevelStats::statsReset()
     this->chancesDropVida = 0.2;
 }
 
-int PlayerLevelStats::statsUpgradeVida()
+void PlayerLevelStats::statsUpgradeVida()
 {
     int novaVida = 100 + (10 * this->vidaLevel);
     this->vidaLevel++;
-    return novaVida;
+    this->vidaMaxima = novaVida;
+    this->vidaPlayer = vidaMaxima;
 }
 
 void PlayerLevelStats::statsReset()

@@ -17,16 +17,27 @@ void Game::initTexturas(){
     this->texturas["TIRO"] = new sf::Texture;
     this->texturas["TIRO"]->loadFromFile("./assets/Tiro.png");
 
+    //Texturas de inimigos
     this->texturas["INIMIGO1"] = new sf::Texture;
     this->texturas["INIMIGO1"]->loadFromFile("./assets/Inimigo1.png");
+
+    //Texturas de itens
+    this->texturas["MUNICAO"] = new sf::Texture;
+    this->texturas["MUNICAO"]->loadFromFile("./assets/Munbox1.png");
+
+    this->texturas["VIDA"] = new sf::Texture;
+    this->texturas["VIDA"]->loadFromFile("./assets/Vidabox.png");
 
     //Texturas da GUI
     this->texturas["BOTAO1"] = new sf::Texture;
     this->texturas["BOTAO1"]->loadFromFile("./assets/contBot.png");
+
     this->texturas["BOTAO2"] = new sf::Texture;
     this->texturas["BOTAO2"]->loadFromFile("./assets/sairBot.png");
+
     this->texturas["PAUSETXT"] = new sf::Texture;
     this->texturas["PAUSETXT"]->loadFromFile("./assets/pauseSprite.png");
+
     this->texturas["OVERTXT"] = new sf::Texture;
     this->texturas["OVERTXT"]->loadFromFile("./assets/overSprite.png");
 }
@@ -225,6 +236,13 @@ void Game::limparGame()
     }
     this->inimigos.clear();
 
+    //Itera sobre a list caixas para deletar os ponteiros pra Caixadrop
+    for(auto *caixa : this->caixas){
+        delete caixa;
+        caixa = nullptr;
+    }
+    this->caixas.clear();
+
     this->spawnClock.restart();
     this->levelClock.restart();
 }
@@ -313,12 +331,12 @@ void Game::tratarInimigos()
         {
             if (static_cast<double>(rand()) / RAND_MAX < this->stats.chancesDropMun)
             {
-                std::cout << " Dropando caixa \n";
+                this->caixas.push_back(new Caixadrop('M', this->texturas["MUNICAO"], inimigo->getCentro()));
             }
 
             if (static_cast<double>(rand()) / RAND_MAX < this->stats.chancesDropVida)
             {
-                std::cout << " Dropando Vida \n";
+                this->caixas.push_back(new Caixadrop('V', this->texturas["VIDA"], inimigo->getCentro()));
             }
             
             delete inimigo;
@@ -326,6 +344,22 @@ void Game::tratarInimigos()
             this->inimigos.erase(contador);
         }
         
+        contador++;
+    }
+}
+
+void Game::tratarCaixas()
+{
+    std::list<Caixadrop*>::iterator contador = this->caixas.begin();
+    for(auto *caixa : this->caixas)
+    {
+        if (caixa->getBounds().intersects(this->heroi.getBounds()))
+        {
+            this->heroi.coletarCaixa(caixa->getMunicao(), caixa->getVida());
+            delete caixa;
+            caixa = nullptr;
+            this->caixas.erase(contador);
+        }
         contador++;
     }
 }
@@ -363,6 +397,7 @@ void Game::update(){
             this->heroi.update(*this->janela);
             this->tratarInimigos();
             this->tratarTiros();
+            this->tratarCaixas();
             this->GUI.update(this->heroi.getVida(), this->heroi.getMun(), this->stats.level, this->tempo);
         }
     }
@@ -387,6 +422,9 @@ void Game::render(){
         }
         for(auto *tiro : this->tiros){
             tiro->render(*this->janela);
+        }
+        for(auto *caixa : this->caixas){
+            caixa->render(*this->janela);
         }
 
         this->GUI.render(*this->janela);

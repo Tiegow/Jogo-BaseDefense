@@ -36,6 +36,7 @@ public:
     void upgradeVida();
     void resetPlayer();
 
+    void coletarCaixa(int munQtd, int vidaQtd);
     void updateMun();
     void setCadAtaque(float tempo);
     void setDestino(sf::Vector2f mouseClick);

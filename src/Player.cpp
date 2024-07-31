@@ -99,12 +99,27 @@ int Player::getMun()
 
 void Player::upgradeVida()
 {
-    this->playerStats.vidaPlayer = this->playerStats.statsUpgradeVida();
+    this->playerStats.statsUpgradeVida();
 }
 
 void Player::resetPlayer()
 {
     this->playerStats.statsReset();
+}
+
+void Player::coletarCaixa(int munQtd, int vidaQtd)
+{
+    if (this->playerStats.vidaPlayer < this->playerStats.vidaMaxima)
+    {
+        if (this->playerStats.vidaPlayer + vidaQtd > this->playerStats.vidaMaxima)
+        {
+            int cura = this->playerStats.vidaMaxima - this->playerStats.vidaPlayer;
+            this->playerStats.vidaPlayer += cura;
+        }
+        else this->playerStats.vidaPlayer += vidaQtd;
+    }
+    
+    this->playerStats.municaoPlayer += munQtd;
 }
 
 void Player::updateMun()

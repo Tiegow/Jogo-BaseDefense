@@ -9,6 +9,7 @@
 #include "Player.hpp"
 #include "Inimigo.hpp"
 #include "Tiro.hpp"
+#include "Caixadrop.hpp"
 #include "GameGUI.hpp"
 
 class Game
@@ -31,9 +32,11 @@ private:
 
     Player heroi;
     Base base;
-    std::list <Inimigo*> inimigos;
-    std::list <Tiro*> tiros;
     GameGUI GUI;
+
+    std::list <Inimigo*> inimigos;
+    std::list <Caixadrop*> caixas;
+    std::list <Tiro*> tiros;
 
     void initVars();
     void initTexturas();
@@ -51,9 +54,12 @@ public:
     bool isRunning();
     void limparGame();
     void proximaFase();
+
     void tratarEventos();
     void tratarTiros();
     void tratarInimigos();
+    void tratarCaixas();
+    
     void update();
     void render();
 };

@@ -17,11 +17,14 @@ private:
     int vidaMinQtd;
 public:
     Caixadrop();
-    Caixadrop(char tipo, sf::Texture* textura);
+    Caixadrop(char tipo, sf::Texture* textura, sf::Vector2f posicao);
     ~Caixadrop();
 
     int getMunicao();
     int getVida();
+    sf::FloatRect getBounds();
+
+    void render(sf::RenderTarget &tela);
 };
 
 #endif
