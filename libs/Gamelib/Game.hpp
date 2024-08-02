@@ -27,6 +27,7 @@ private:
     
     //VARS
     bool paused;
+    bool up;
     bool over;
     int tempo; //tempo restante ate a proxima fase
 
@@ -44,14 +45,7 @@ private:
 
     void renderPause();
     void renderOver();
-public:
-    sf::RenderWindow * janela;
-
-    Game();
-    ~Game();
-
-    //Funções
-    bool isRunning();
+    void renderUpgrade();
     void limparGame();
     void proximaFase();
 
@@ -59,7 +53,14 @@ public:
     void tratarTiros();
     void tratarInimigos();
     void tratarCaixas();
-    
+public:
+    sf::RenderWindow * janela;
+
+    Game();
+    ~Game();
+
+    //Funções
+    bool isRunning();    
     void update();
     void render();
 };

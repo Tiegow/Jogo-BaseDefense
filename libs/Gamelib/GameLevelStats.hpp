@@ -5,7 +5,7 @@ struct GameLevelStats
 {
     //Fase
     unsigned level = 1;
-    float tempoLevel = 30; //tempo em segundos para passar de nivel
+    float tempoLevel = 8; //tempo em segundos para passar de nivel
     float inimSpawnVel = 4; //tempo em segundos para surgir inimigos
     int maxInim = 5;
     float chancesDropMun = 0.36; //chance de inimigos deixarem munições no jogo
@@ -20,28 +20,39 @@ struct PlayerLevelStats
     unsigned vidaLevel = 1;
     unsigned velLevel = 1;
     unsigned cadLevel = 1;
+    unsigned cadMaxLevel = 5;
+    unsigned velTLevel = 1;
 
     int vidaPlayer = 100;
     int vidaMaxima = 100;
     int municaoPlayer = 25;
     float velocidadePlayer = 4;
     float cadenciaAtaquePlayer = 1; //Tempo entre um ataque e outro em segundos
+    float velTiroPlayer = 10; //Velocidade do projétil
     
     void statsUpgradeVida();
+    void statsUpgradeVelocidade();
+    void statsUpgradeCadencia();
+    void statsUpgradeVelT();
     void statsReset();
 };
 
 struct BaseLevelStats
 {
     unsigned velLevel = 1;
+    unsigned maxVelLevel = 5;
     unsigned curaLevel = 1;
-    unsigned resistLevel = 1;
+    unsigned maxCuraLevel = 5;
+    unsigned escudoLevel = 1;
+    unsigned maxEscudoLevel = 5;
 
-    int velCuraBase = 1; //Tempo em segundos entre as curas automaticas da base
+    float velCuraBase = 1; //Tempo em segundos entre as curas automaticas da base
     int autoCuraBase = 2; //Quantidade de vida que a base recupera a cada cura automatica
-    int resistenciaBase = 0; //Reduz o dano sofrido pela base
+    int escudoBase = 0; //Reduz o dano sofrido pela base
     
-    void statsUpgrade();
+    void statsUpgradeVel();
+    void statsUpgradeCura();
+    void statsUpgradeEscudo();
     void statsReset();
 };
 

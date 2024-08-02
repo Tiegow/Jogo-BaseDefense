@@ -82,31 +82,6 @@ bool Player::podeAtacar()
     return false;
 }
 
-float Player::getCadAtaque()
-{
-    return this->playerStats.cadenciaAtaquePlayer;
-}
-
-int Player::getVida()
-{
-    return this->playerStats.vidaPlayer;
-}
-
-int Player::getMun()
-{
-    return this->playerStats.municaoPlayer;
-}
-
-void Player::upgradeVida()
-{
-    this->playerStats.statsUpgradeVida();
-}
-
-void Player::resetPlayer()
-{
-    this->playerStats.statsReset();
-}
-
 void Player::coletarCaixa(int munQtd, int vidaQtd)
 {
     if (this->playerStats.vidaPlayer < this->playerStats.vidaMaxima)
@@ -140,11 +115,6 @@ void Player::setPos(sf::Vector2f posicao)
 void Player::receberDano(int dano)
 {
     this->playerStats.vidaPlayer -= dano;
-}
-
-void Player::setCadAtaque(float tempo)
-{
-    this->playerStats.cadenciaAtaquePlayer = tempo;
 }
 
 void Player::update(sf::RenderTarget& tela){

@@ -12,14 +12,14 @@ private:
     sf::Vector2f posicaoCentro;
     sf::Sprite sprite;
     sf::Texture textura;
-
-    PlayerLevelStats playerStats;
     bool movendo;
 
     void initTextura();
     void initSprite();
     void mover();
 public:
+    PlayerLevelStats playerStats;
+    
     Player();
     ~Player();
 
@@ -29,16 +29,9 @@ public:
     sf::FloatRect getBounds();
 
     bool podeAtacar();
-    float getCadAtaque();
-    int getVida();
-    int getMun();
-    
-    void upgradeVida();
-    void resetPlayer();
 
     void coletarCaixa(int munQtd, int vidaQtd);
     void updateMun();
-    void setCadAtaque(float tempo);
     void setDestino(sf::Vector2f mouseClick);
     void setPos(sf::Vector2f posicao);
     void receberDano(int dano);

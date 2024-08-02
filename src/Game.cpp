@@ -6,6 +6,7 @@ void Game::initVars(){
     this->janela = nullptr;
     this->paused = false;
     this->over = false;
+    this->up = false;
     this->tempo = this->stats.tempoLevel;
 }
 
@@ -40,6 +41,27 @@ void Game::initTexturas(){
 
     this->texturas["OVERTXT"] = new sf::Texture;
     this->texturas["OVERTXT"]->loadFromFile("./assets/overSprite.png");
+
+    this->texturas["UPV"] = new sf::Texture;
+    this->texturas["UPV"]->loadFromFile("./assets/UpgradeV.png");
+
+    this->texturas["UPS"] = new sf::Texture;
+    this->texturas["UPS"]->loadFromFile("./assets/UpgradeS.png");
+
+    this->texturas["UPT"] = new sf::Texture;
+    this->texturas["UPT"]->loadFromFile("./assets/UpgradeT.png");
+
+    this->texturas["UPTS"] = new sf::Texture;
+    this->texturas["UPTS"]->loadFromFile("./assets/UpgradeTS.png");
+
+    this->texturas["UPVB"] = new sf::Texture;
+    this->texturas["UPVB"]->loadFromFile("./assets/UpgradeVB.png");
+
+    this->texturas["UPCB"] = new sf::Texture;
+    this->texturas["UPCB"]->loadFromFile("./assets/UpgradeCB.png");
+
+    this->texturas["UPEB"] = new sf::Texture;
+    this->texturas["UPEB"]->loadFromFile("./assets/UpgradeEB.png");
 }
 
 void Game::initJanela(){
@@ -120,7 +142,7 @@ void Game::renderOver()
         if (botaoPres(*this->janela, contBot.getGlobalBounds()))
         {
             this->stats.statsReset();
-            this->heroi.resetPlayer();
+            this->heroi.playerStats.statsReset();
             this->base.resetBase();
 
             this->limparGame();
@@ -138,6 +160,147 @@ void Game::renderOver()
     this->janela->draw(overText);
     this->janela->draw(contBot);
     this->janela->draw(sairBot);
+}
+
+void Game::renderUpgrade()
+{
+    float botaoScale = 2;
+    sf::Vector2f botPos;
+    this->janela->clear(sf::Color(23,21,35,255));
+
+    sf::Sprite playerVUp;
+    playerVUp.setTexture(*this->texturas["UPV"]);
+    playerVUp.setScale(botaoScale, botaoScale);
+    botPos = centrObjeto(this->janela->getSize(), playerVUp.getGlobalBounds());
+    playerVUp.setPosition(botPos.x - playerVUp.getLocalBounds().width * 6, botPos.y);
+    this->janela->draw(playerVUp);
+
+    sf::Sprite playerSUp;
+    playerSUp.setTexture(*this->texturas["UPS"]);
+    playerSUp.setScale(botaoScale, botaoScale);
+    botPos = centrObjeto(this->janela->getSize(), playerSUp.getGlobalBounds());
+    playerSUp.setPosition(botPos.x - playerSUp.getLocalBounds().width * 2, botPos.y);
+    this->janela->draw(playerSUp);
+
+    sf::Sprite playerTUp;
+    if (this->heroi.playerStats.cadLevel < this->heroi.playerStats.cadMaxLevel)
+    {
+        playerTUp.setTexture(*this->texturas["UPT"]);
+        playerTUp.setScale(botaoScale, botaoScale);
+        botPos = centrObjeto(this->janela->getSize(), playerTUp.getGlobalBounds());
+        playerTUp.setPosition(botPos.x + playerTUp.getLocalBounds().width * 2, botPos.y);
+
+        this->janela->draw(playerTUp);
+    }
+
+    sf::Sprite playerTSUp;
+    playerTSUp.setTexture(*this->texturas["UPTS"]);
+    playerTSUp.setScale(botaoScale, botaoScale);
+    botPos = centrObjeto(this->janela->getSize(), playerTSUp.getGlobalBounds());
+    playerTSUp.setPosition(botPos.x + playerTSUp.getLocalBounds().width * 6, botPos.y);
+    this->janela->draw(playerTSUp);
+
+    //BASE
+    //Vida recebida por cura
+    sf::Sprite baseVUp;
+    if (this->base.stats.curaLevel < this->base.stats.maxCuraLevel)
+    {
+        baseVUp.setTexture(*this->texturas["UPVB"]);
+        baseVUp.setScale(botaoScale, botaoScale);
+        botPos = centrObjeto(this->janela->getSize(), baseVUp.getGlobalBounds());
+        baseVUp.setPosition(botPos.x, botPos.y + 200);
+        this->janela->draw(baseVUp);
+    }
+
+    //Velocidade da cura
+    sf::Sprite baseCUp;
+    if (this->base.stats.velLevel < this->base.stats.maxVelLevel)
+    {
+        baseCUp.setTexture(*this->texturas["UPCB"]);
+        baseCUp.setScale(botaoScale, botaoScale);
+        botPos = centrObjeto(this->janela->getSize(), baseCUp.getGlobalBounds());
+        baseCUp.setPosition(botPos.x + baseCUp.getLocalBounds().width * 4, botPos.y + 200);
+        this->janela->draw(baseCUp);
+    }
+
+    //Escudo
+    sf::Sprite baseEUp;
+    if (this->base.stats.escudoLevel < this->base.stats.maxEscudoLevel)
+    {
+        baseEUp.setTexture(*this->texturas["UPEB"]);
+        baseEUp.setScale(botaoScale, botaoScale);
+        botPos = centrObjeto(this->janela->getSize(), baseEUp.getGlobalBounds());
+        baseEUp.setPosition(botPos.x - baseEUp.getLocalBounds().width * 4, botPos.y + 200);
+        this->janela->draw(baseEUp);
+    }
+
+    //Mouse
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        //Upgrade Vida
+        if (botaoPres(*this->janela, playerVUp.getGlobalBounds()))
+        {
+            this->heroi.playerStats.statsUpgradeVida();
+
+            //Começando nova fase
+            this->levelClock.restart();
+            this->proximaFase();
+        }
+        //Upgrade Cadencia
+        else if (botaoPres(*this->janela, playerTUp.getGlobalBounds()))
+        {
+            this->heroi.playerStats.statsUpgradeCadencia();
+
+            //Começando nova fase
+            this->levelClock.restart();
+            this->proximaFase();
+        }
+        //Upgrade Velocidade
+        else if (botaoPres(*this->janela, playerSUp.getGlobalBounds()))
+        {
+            this->heroi.playerStats.statsUpgradeVelocidade();
+
+            //Começando nova fase
+            this->levelClock.restart();
+            this->proximaFase();
+        }
+        //Upgrade Velocidade Projétil
+        else if (botaoPres(*this->janela, playerTSUp.getGlobalBounds()))
+        {
+            this->heroi.playerStats.statsUpgradeVelT();
+
+            //Começando nova fase
+            this->levelClock.restart();
+            this->proximaFase();
+        }
+        //Upgrade Cura Base
+        else if (botaoPres(*this->janela, baseVUp.getGlobalBounds()))
+        {
+            this->base.stats.statsUpgradeCura();
+
+            //Começando nova fase
+            this->levelClock.restart();
+            this->proximaFase();
+        }
+        //Upgrade Velocidade Cura Base
+        else if (botaoPres(*this->janela, baseCUp.getGlobalBounds()))
+        {
+            this->base.stats.statsUpgradeVel();
+
+            //Começando nova fase
+            this->levelClock.restart();
+            this->proximaFase();
+        }
+        //Upgrade Velocidade Escudo Base
+        else if (botaoPres(*this->janela, baseEUp.getGlobalBounds()))
+        {
+            this->base.stats.statsUpgradeEscudo();
+
+            //Começando nova fase
+            this->levelClock.restart();
+            this->proximaFase();
+        }
+    }
 }
 //----------------------------------------//
 
@@ -193,7 +356,7 @@ void Game::tratarEventos(){
         }
 
         //Eventos do jogo
-        if (!this->paused && !this->over)
+        if (!this->paused && !this->over && !this->up)
         {
             switch (this->evento.type)
             {
@@ -201,7 +364,7 @@ void Game::tratarEventos(){
                 //Q
                     if(this->evento.key.code == sf::Keyboard::Q && this->heroi.podeAtacar()){
                         this->mousePos = getMouseCoords(*this->janela);
-                        this->tiros.push_back(new Tiro(this->texturas["TIRO"], this->heroi.getCentro(), mousePos, false));
+                        this->tiros.push_back(new Tiro(this->texturas["TIRO"], this->heroi.getCentro(), mousePos, this->heroi.playerStats.velTiroPlayer, false));
                         this->heroi.updateMun();
                     }
                     break;
@@ -252,6 +415,7 @@ void Game::proximaFase()
     this->limparGame();
     this->stats.statsNext();
     this->tempo = this->stats.tempoLevel;
+    this->up = false;
 }
 
 void Game::tratarTiros(){
@@ -323,7 +487,7 @@ void Game::tratarInimigos()
 
         if (inimigo->atacar())
         {
-            this->tiros.push_back(new Tiro(this->texturas["TIRO"], inimigo->getCentro(), this->heroi.getCentro(), true));
+            this->tiros.push_back(new Tiro(this->texturas["TIRO"], inimigo->getCentro(), this->heroi.getCentro(), 10, true));
         }
 
         //Removendo ao morrer
@@ -367,16 +531,13 @@ void Game::tratarCaixas()
 void Game::update(){
     sf::Time dt = this->levelClock.getElapsedTime();
     this->tempo = this->stats.tempoLevel - dt.asSeconds();
-    
+
     if (dt.asSeconds() >= this->stats.tempoLevel)
     {
-        std::cout << "Passou de fase \n";
-        this->levelClock.restart();
-        this->proximaFase();
+        this->up = true;
     }
-    
 
-    if (this->base.getVida() <= 0 || this->heroi.getVida() <= 0)
+    if (this->base.getVida() <= 0 || this->heroi.playerStats.vidaPlayer <= 0)
     {
         this->over = true;
     }
@@ -390,6 +551,11 @@ void Game::update(){
             //Abrir tela de pause
             this->renderPause();
         }
+        else if (this->up)
+        {
+            //Abrir tela de upgrade
+            this->renderUpgrade();
+        }
         else
         {
             //Fluxo normal do game
@@ -398,19 +564,18 @@ void Game::update(){
             this->tratarInimigos();
             this->tratarTiros();
             this->tratarCaixas();
-            this->GUI.update(this->heroi.getVida(), this->heroi.getMun(), this->stats.level, this->tempo);
+            this->GUI.update(this->heroi.playerStats.vidaPlayer, this->heroi.playerStats.municaoPlayer, this->stats.level, this->tempo);
         }
     }
     else
     {
         this->renderOver();
     }
-    
 }
 
 void Game::render(){
     //Renderiza os elementos do jogo
-    if (!this->paused && !this->over)
+    if (!this->paused && !this->over && !this->up)
     {
         this->janela->clear(sf::Color::White);
 

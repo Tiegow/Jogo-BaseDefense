@@ -3,26 +3,35 @@
 
 void GameLevelStats::statsNext()
 {
+    /*
+        Atualiza os status da fase ao passar de nivel
+    */
     this->level++;
-    this->tempoLevel += 20; //Aumenta o tempo para sobreviver a fase
-    this->inimSpawnVel -= 0.2; //Reduz o tempo para surgir inimigos
+    this->tempoLevel += 3; //Aumenta o tempo para sobreviver a fase
+
+    //Aumenta a velocidade de surgimento de inimigos (maxima de 0.5s)
+    if (this->inimSpawnVel > 0.5)
+    {
+        this->inimSpawnVel -= 0.25; //Reduz o tempo para surgir inimigos
+    }
+    
     this->maxInim++; //Aumenta a quantidade maxima de inimigos
 
-    //Diminui as chances de caixas (minimo de 5%)
-    if (this->chancesDropMun > 0.05)
+    //Diminui as chances de caixas (minimo de 6%)
+    if (this->chancesDropMun > 0.06)
     {
        this->chancesDropMun -= 0.02;  
     }
-    if (this->chancesDropVida > 0.05)
+    if (this->chancesDropVida > 0.06)
     {
-        this->chancesDropVida += 0.02;
+        this->chancesDropVida -= 0.02;
     }
 }
 
 void GameLevelStats::statsReset()
 {
     this->level = 1;
-    this->tempoLevel = 30;
+    this->tempoLevel = 8;
     this->inimSpawnVel = 4;
     this->maxInim = 5;
     this->chancesDropMun = 0.36;
@@ -31,10 +40,36 @@ void GameLevelStats::statsReset()
 
 void PlayerLevelStats::statsUpgradeVida()
 {
-    int novaVida = 100 + (10 * this->vidaLevel);
+    int vidaUp = this->vidaMaxima + 10;
     this->vidaLevel++;
-    this->vidaMaxima = novaVida;
+    this->vidaMaxima = vidaUp;
     this->vidaPlayer = vidaMaxima;
+}
+
+void PlayerLevelStats::statsUpgradeVelocidade()
+{
+    float velUp = this->velocidadePlayer + 0.5;
+    this->velLevel++;
+    this->velocidadePlayer = velUp;
+}
+
+void PlayerLevelStats::statsUpgradeCadencia()
+{
+    if (this->cadLevel < this->cadMaxLevel)
+    {
+        float cadUp = this->cadenciaAtaquePlayer - 0.25;
+        this->cadenciaAtaquePlayer = cadUp;   
+        this->municaoPlayer += 25;
+        this->cadLevel++;
+    }
+    std::cout << this->cadenciaAtaquePlayer << "\n";
+}
+
+void PlayerLevelStats::statsUpgradeVelT()
+{
+    float velTUp = this->velTiroPlayer + 5;
+    this->velTLevel++;
+    this->velTiroPlayer = velTUp;
 }
 
 void PlayerLevelStats::statsReset()
@@ -42,20 +77,56 @@ void PlayerLevelStats::statsReset()
     this->vidaLevel = 1;
     this->velLevel = 1;
     this->cadLevel = 1;
+    this->velTLevel = 1;
 
     this->vidaPlayer = 100;
+    this->vidaMaxima = 100;
     this->municaoPlayer = 25;
     this->velocidadePlayer = 4;
     this->cadenciaAtaquePlayer = 1;
+    this->velTiroPlayer = 10;
+}
+
+void BaseLevelStats::statsUpgradeVel()
+{
+    if (this->velLevel < this->maxVelLevel)
+    {
+        float velUp = this->velCuraBase - 0.15;
+        this->velCuraBase = velUp;
+        this->velLevel++;
+    }    
+    std::cout << this->velCuraBase << "\n";
+}
+
+void BaseLevelStats::statsUpgradeCura()
+{
+    if (this->curaLevel < this->maxCuraLevel)
+    {
+        int curaUp = this->autoCuraBase + 1;
+        this->autoCuraBase = curaUp;
+        this->curaLevel++;
+    }
+    std::cout << this->autoCuraBase << "\n";
+}
+
+void BaseLevelStats::statsUpgradeEscudo()
+{
+    if (this->escudoLevel < this->maxEscudoLevel)
+    {
+        int escUp = this->escudoBase + 1;
+        this->escudoBase = escUp;
+        this->escudoLevel++;
+    }   
+    std::cout << this->escudoBase << "\n";
 }
 
 void BaseLevelStats::statsReset()
 {   
     this->velLevel = 1;
     this->curaLevel = 1;
-    this->resistLevel = 1;
+    this->escudoLevel = 1;
 
     this->velCuraBase = 1;
     this->autoCuraBase = 2;
-    this->resistenciaBase = 0;
+    this->escudoBase = 0;
 }

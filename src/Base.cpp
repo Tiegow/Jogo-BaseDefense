@@ -54,7 +54,7 @@ bool Base::destruida()
 void Base::receberDano(int dano){
     if (this->vida > 0) 
     {
-        this->vida -= (dano - this->stats.resistenciaBase);
+        this->vida -= (dano - this->stats.escudoBase);
     }
 }
 

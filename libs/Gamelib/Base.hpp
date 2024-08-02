@@ -9,13 +9,13 @@ class Base
 private:
     sf::Clock baseClock;
 
-    BaseLevelStats stats;
     int vida;
     int maxVida;
     int corVida;
 
     void curar(); //Cura automatica
 public:
+    BaseLevelStats stats;
     sf::RectangleShape baseBody;
     
     Base();
