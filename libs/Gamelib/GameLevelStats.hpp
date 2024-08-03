@@ -5,11 +5,16 @@ struct GameLevelStats
 {
     //Fase
     unsigned level = 1;
-    float tempoLevel = 8; //tempo em segundos para passar de nivel
+    float tempoLevel = 15; //tempo em segundos para passar de nivel
+
     float inimSpawnVel = 4; //tempo em segundos para surgir inimigos
     int maxInim = 5;
-    float chancesDropMun = 0.36; //chance de inimigos deixarem munições no jogo
-    float chancesDropVida = 0.2; //chance de inimigos deixarem curas no jogo
+    float inim2chance = 0;
+    float inim3chance = 0;
+    float inim4chance = 0;
+
+    float chancesDropMun = 0.46; //chance de inimigos deixarem munições no jogo
+    float chancesDropVida = 0.36; //chance de inimigos deixarem curas no jogo
 
     void statsNext();
     void statsReset();
@@ -39,6 +44,7 @@ struct PlayerLevelStats
 
 struct BaseLevelStats
 {
+    //Base
     unsigned velLevel = 1;
     unsigned maxVelLevel = 5;
     unsigned curaLevel = 1;

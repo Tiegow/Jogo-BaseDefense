@@ -5,7 +5,7 @@ Tiro::Tiro()
 {
 }
 
-Tiro::Tiro(sf::Texture* textura, sf::Vector2f posicao, sf::Vector2f direcao, float velocidade, bool enemy)
+Tiro::Tiro(sf::Texture* textura, sf::Vector2f posicao, sf::Vector2f direcao, float velocidade, int dano, bool enemy)
 {
     this->sprite.setTexture(*textura);
     this->sprite.setScale(2.5, 2.5);
@@ -13,7 +13,7 @@ Tiro::Tiro(sf::Texture* textura, sf::Vector2f posicao, sf::Vector2f direcao, flo
     this->direcao = direcao - posicao;
     this->inimigo = enemy;
     this->velocidade = velocidade;
-    this->dano = 10;
+    this->dano = dano;
     this->hit = false;
 }
 

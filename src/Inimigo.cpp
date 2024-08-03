@@ -6,10 +6,16 @@ Inimigo::Inimigo()
 {
 }
 
-Inimigo::Inimigo(sf::Texture *textura, sf::RenderTarget &tela)
+Inimigo::Inimigo(int type, sf::Texture *textura, sf::RenderTarget &tela)
 {
+    this->tipo = type;
     this->sprite.setTexture(*textura);
-    this->sprite.scale(3.45,3.45);
+
+    if (this->tipo == 4)
+    {
+        this->sprite.scale(7, 7);
+    }
+    else this->sprite.scale(3.45,3.45);
 
     //Surgimento aleatorio do inimigo
     srand(time(0));
@@ -36,11 +42,44 @@ Inimigo::Inimigo(sf::Texture *textura, sf::RenderTarget &tela)
             break;
     }
 
-    this->vida = 10;
-    this->velocidade = 3;
-    this->distAtaque = 150;
-    this->safeDist = 300;
-    this->cadenciaAtaque = 2; //segundos
+    switch (this->tipo)
+    {
+    case 1:
+        this->vida = 10;
+        this->distAtaque = 150;
+        this->safeDist = 300;
+        this->velocidade = 3;
+        this->cadenciaAtaque = 2; //segundos        
+        break;
+    
+    case 2:
+        this->vida = 10;
+        this->distAtaque = 150;
+        this->safeDist = 300;
+        this->velocidade = 7;
+        this->cadenciaAtaque = 0.5; 
+        break;
+
+    case 3:
+        this->vida = 10;
+        this->distAtaque = 1000;
+        this->safeDist = 600;
+        this->velocidade = 1;
+        this->cadenciaAtaque = 1; 
+        break;
+    
+    case 4:
+        this->vida = 30;
+        this->distAtaque = 200;
+        this->safeDist = 300;
+        this->velocidade = 1;
+        this->cadenciaAtaque = 0.2; 
+        break;
+
+    default:
+        break;
+    }
+
     this->movendo = true;
     this->fora = false;
 }
@@ -51,7 +90,7 @@ Inimigo::~Inimigo()
 
 void Inimigo::moverIA()
 {
-    //Manter certa distancia do player
+    //Manter certa distancia do alvo
     if (this->destino.x - this->posicaoCentro.x < 0)
     {
         this->destino.x += this->safeDist;
@@ -71,8 +110,21 @@ void Inimigo::moverIA()
     }
 }
 
-void Inimigo::mover()
+void Inimigo::teleport(sf::RenderTarget &tela)
 {
+    sf::Time tempoTP = this->tpClock.getElapsedTime();
+    if (tempoTP.asSeconds() >= 2)
+    {
+        sf::Vector2f telPoint;
+        telPoint.x = rand() % tela.getSize().x;
+        telPoint.y = rand() % tela.getSize().y;
+        this->sprite.setPosition(telPoint);   
+        this->tpClock.restart();
+    }
+}
+
+void Inimigo::mover()
+{    
     sf::Vector2f direcao = this->destino - this->posicaoCentro; //Vetor de direção ao ponto do click
     
     float comprimento = std::sqrt(direcao.x * direcao.x + direcao.y * direcao.y);
@@ -150,6 +202,11 @@ sf::FloatRect Inimigo::getBounds()
     return this->sprite.getGlobalBounds();
 }
 
+int Inimigo::getTipo()
+{
+    return this->tipo;
+}
+
 int Inimigo::getVida()
 {
     return this->vida;
@@ -175,13 +232,21 @@ void Inimigo::receberDano(int dano)
     this->vida -= dano;
 }
 
-void Inimigo::update(sf::Vector2f playerPos, sf::RenderTarget &tela)
+void Inimigo::update(sf::Vector2f destPos, sf::RenderTarget &tela)
 {
     this->posicaoCentro = getPosCentro(this->sprite);
-    this->destino = playerPos;
+    this->destino = destPos;
     this->moverIA();
-    this->mover();
-    this->foraTela(tela);
+    if (this->tipo == 3)
+    {
+        this->teleport(tela);
+        this->mover();
+    }
+    else
+    {
+        this->mover();
+        this->foraTela(tela);
+    }
 }
 
 void Inimigo::render(sf::RenderTarget &tela)

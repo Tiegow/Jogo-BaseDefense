@@ -22,6 +22,15 @@ void Game::initTexturas(){
     this->texturas["INIMIGO1"] = new sf::Texture;
     this->texturas["INIMIGO1"]->loadFromFile("./assets/Inimigo1.png");
 
+    this->texturas["INIMIGO2"] = new sf::Texture;
+    this->texturas["INIMIGO2"]->loadFromFile("./assets/Inimigo2.png");
+
+    this->texturas["INIMIGO3"] = new sf::Texture;
+    this->texturas["INIMIGO3"]->loadFromFile("./assets/Inimigo3.png");
+
+    this->texturas["INIMIGO4"] = new sf::Texture;
+    this->texturas["INIMIGO4"]->loadFromFile("./assets/Inimigo4.png");
+
     //Texturas de itens
     this->texturas["MUNICAO"] = new sf::Texture;
     this->texturas["MUNICAO"]->loadFromFile("./assets/Munbox1.png");
@@ -115,6 +124,9 @@ void Game::renderPause()
 
 void Game::renderOver()
 {
+    this->levelClock.restart();
+    this->spawnClock.restart();
+
     sf::Sprite overText;
     sf::Vector2f textPos;
     overText.setTexture(*this->texturas["OVERTXT"]);
@@ -277,6 +289,7 @@ void Game::renderUpgrade()
         else if (botaoPres(*this->janela, baseVUp.getGlobalBounds()))
         {
             this->base.stats.statsUpgradeCura();
+            this->base.restaurar();
 
             //Começando nova fase
             this->levelClock.restart();
@@ -364,7 +377,7 @@ void Game::tratarEventos(){
                 //Q
                     if(this->evento.key.code == sf::Keyboard::Q && this->heroi.podeAtacar()){
                         this->mousePos = getMouseCoords(*this->janela);
-                        this->tiros.push_back(new Tiro(this->texturas["TIRO"], this->heroi.getCentro(), mousePos, this->heroi.playerStats.velTiroPlayer, false));
+                        this->tiros.push_back(new Tiro(this->texturas["TIRO"], this->heroi.getCentro(), mousePos, this->heroi.playerStats.velTiroPlayer, 10, false));
                         this->heroi.updateMun();
                     }
                     break;
@@ -467,6 +480,32 @@ void Game::tratarTiros(){
     }
 }
 
+void Game::spawnInimigos()
+{
+    if (static_cast<double>(rand()) / RAND_MAX < this->stats.inim4chance)
+    {
+        this->inimigos.push_back(new Inimigo(4, this->texturas["INIMIGO4"], *this->janela));
+    }
+    else if (static_cast<double>(rand()) / RAND_MAX < this->stats.inim3chance)
+    {
+        this->inimigos.push_back(new Inimigo(3, this->texturas["INIMIGO3"], *this->janela));
+    }
+    else if (static_cast<double>(rand()) / RAND_MAX < this->stats.inim2chance)
+    {
+        this->inimigos.push_back(new Inimigo(2, this->texturas["INIMIGO2"], *this->janela));
+    }
+    else
+    {
+        this->inimigos.push_back(new Inimigo(1, this->texturas["INIMIGO1"], *this->janela));
+    }
+
+    if (this->stats.level >= 3)
+    {
+        this->inimigos.push_back(new Inimigo(1, this->texturas["INIMIGO1"], *this->janela));
+    }
+    
+}
+
 void Game::tratarInimigos()
 {
     //Spawnando inimigo
@@ -476,23 +515,56 @@ void Game::tratarInimigos()
         if (this->inimigos.size() < this->stats.maxInim)
         {
             this->spawnClock.restart();
-            this->inimigos.push_back(new Inimigo(this->texturas["INIMIGO1"], *this->janela));
+            this->spawnInimigos();
         }
     }
 
     std::list<Inimigo*>::iterator contador = this->inimigos.begin();
     for (auto *inimigo : this->inimigos)
     {
-        inimigo->update(this->heroi.getCentro(), *this->janela);
+        if (inimigo->getTipo() == 4 || inimigo->getTipo() == 3)
+        {
+            inimigo->update(this->base.centro, *this->janela);
+        }
+        else
+        {
+            inimigo->update(this->heroi.getCentro(), *this->janela);
+        }
 
         if (inimigo->atacar())
         {
-            this->tiros.push_back(new Tiro(this->texturas["TIRO"], inimigo->getCentro(), this->heroi.getCentro(), 10, true));
+            if (inimigo->getTipo() == 4)
+            {
+                this->tiros.push_back(new Tiro(
+                    this->texturas["TIRO"], 
+                    inimigo->getCentro(), 
+                    this->base.centro, 
+                    10, 
+                    this->base.stats.escudoBase + 3, 
+                    true
+                ));
+            }
+            else if (inimigo->getTipo() == 3)
+            {
+                this->tiros.push_back(new Tiro(
+                    this->texturas["TIRO"], 
+                    inimigo->getCentro(), 
+                    this->base.centro, 
+                    10, 
+                    5, 
+                    true
+                ));
+            }
+            else
+            {
+                this->tiros.push_back(new Tiro(this->texturas["TIRO"], inimigo->getCentro(), this->heroi.getCentro(), 10, 10, true));
+            }
         }
 
         //Removendo ao morrer
         if (inimigo->getVida() <= 0)
         {
+            //Surgimento randomico das caixas
             if (static_cast<double>(rand()) / RAND_MAX < this->stats.chancesDropMun)
             {
                 this->caixas.push_back(new Caixadrop('M', this->texturas["MUNICAO"], inimigo->getCentro()));
@@ -577,7 +649,7 @@ void Game::render(){
     //Renderiza os elementos do jogo
     if (!this->paused && !this->over && !this->up)
     {
-        this->janela->clear(sf::Color::White);
+        this->janela->clear(sf::Color(224, 225, 221, 255));
 
         this->base.render(*this->janela);
         this->heroi.render(*this->janela);

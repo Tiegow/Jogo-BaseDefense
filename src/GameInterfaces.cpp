@@ -48,6 +48,18 @@ sf::Vector2f getPosCentro(sf::Sprite& sprite){
     return centro;
 }
 
+sf::Vector2f getPosCentro(sf::RectangleShape& retangulo){
+    /*
+        Calcula a posição do ponto central do retangulo
+            *SFML não considera o centro do retangulo como sendo as coordenadas da sua posição
+    */
+    sf::Vector2f retanguloPos = retangulo.getPosition();
+    sf::FloatRect retanguloDimensoes = retangulo.getGlobalBounds();
+    sf::Vector2f centro(retanguloPos.x + retanguloDimensoes.width / 2, retanguloPos.y + retanguloDimensoes.height / 2);
+
+    return centro;
+}
+
 bool botaoPres(sf::RenderWindow &janela, sf::FloatRect botaoBounds)
 {
     sf::Vector2f mousePosit = getMouseCoords(janela);

@@ -13,14 +13,14 @@ Caixadrop::Caixadrop(char tipo, sf::Texture* textura, sf::Vector2f posicao)
     this->vidaQtd = 0;
     if (tipo == 'M')
     {
-        this->munMaxQtd = 25;
+        this->munMaxQtd = 35;
         this->munMinQtd = 10;
         this->munQtd = rand() % (this->munMaxQtd - this->munMinQtd + 1) + this->munMinQtd;
     }
     else if (tipo == 'V')
     {
-        this->vidaMaxQtd = 15;
-        this->vidaMinQtd = 5;
+        this->vidaMaxQtd = 20;
+        this->vidaMinQtd = 10;
         this->vidaQtd = rand() % (this->vidaMaxQtd - this->vidaMinQtd + 1) + this->vidaMinQtd;
         this->sprite.setPosition(posicao.x + 40, posicao.y);
     }

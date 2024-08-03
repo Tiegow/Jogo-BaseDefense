@@ -17,7 +17,7 @@ private:
     void mover();
 public:
     Tiro();
-    Tiro(sf::Texture* textura, sf::Vector2f posicao, sf::Vector2f dir, float velocidade, bool inimigo);
+    Tiro(sf::Texture* textura, sf::Vector2f posicao, sf::Vector2f dir, float velocidade, int dano, bool inimigo);
     ~Tiro();
 
     sf::FloatRect getBounds();

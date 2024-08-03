@@ -49,6 +49,7 @@ private:
     void limparGame();
     void proximaFase();
 
+    void spawnInimigos();
     void tratarEventos();
     void tratarTiros();
     void tratarInimigos();

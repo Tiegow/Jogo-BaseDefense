@@ -17,7 +17,8 @@ private:
 public:
     BaseLevelStats stats;
     sf::RectangleShape baseBody;
-    
+    sf::Vector2f centro;
+
     Base();
     ~Base();
 
@@ -25,7 +26,7 @@ public:
     int getVida();
     bool destruida();
     void spawn(sf::RenderTarget& tela);
-    void curar(int cura);
+    void restaurar();
     void receberDano(int dano);   
 
     void resetBase();

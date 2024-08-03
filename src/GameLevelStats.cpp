@@ -26,21 +26,39 @@ void GameLevelStats::statsNext()
     {
         this->chancesDropVida -= 0.02;
     }
+
+    if (this->level == 3)
+    {
+        this->inim2chance += 0.30;
+    }
+    if (this->level == 6)
+    {
+        this->inim3chance += 0.20;
+    }
+    if (this->level == 9)
+    {
+        this->inim4chance += 0.10;
+    }
 }
 
 void GameLevelStats::statsReset()
 {
     this->level = 1;
-    this->tempoLevel = 8;
+    this->tempoLevel = 15;
+
     this->inimSpawnVel = 4;
     this->maxInim = 5;
-    this->chancesDropMun = 0.36;
-    this->chancesDropVida = 0.2;
+    this->inim2chance = 0;
+    this->inim3chance = 0;
+    this->inim4chance = 0;
+
+    this->chancesDropMun = 0.46;
+    this->chancesDropVida = 0.36;
 }
 
 void PlayerLevelStats::statsUpgradeVida()
 {
-    int vidaUp = this->vidaMaxima + 10;
+    int vidaUp = this->vidaMaxima + 25;
     this->vidaLevel++;
     this->vidaMaxima = vidaUp;
     this->vidaPlayer = vidaMaxima;
@@ -48,7 +66,7 @@ void PlayerLevelStats::statsUpgradeVida()
 
 void PlayerLevelStats::statsUpgradeVelocidade()
 {
-    float velUp = this->velocidadePlayer + 0.5;
+    float velUp = this->velocidadePlayer + 1;
     this->velLevel++;
     this->velocidadePlayer = velUp;
 }
@@ -91,7 +109,7 @@ void BaseLevelStats::statsUpgradeVel()
 {
     if (this->velLevel < this->maxVelLevel)
     {
-        float velUp = this->velCuraBase - 0.15;
+        float velUp = this->velCuraBase - 0.2;
         this->velCuraBase = velUp;
         this->velLevel++;
     }    
@@ -102,7 +120,7 @@ void BaseLevelStats::statsUpgradeCura()
 {
     if (this->curaLevel < this->maxCuraLevel)
     {
-        int curaUp = this->autoCuraBase + 1;
+        int curaUp = this->autoCuraBase + 3;
         this->autoCuraBase = curaUp;
         this->curaLevel++;
     }
