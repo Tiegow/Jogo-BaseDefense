@@ -11,7 +11,7 @@ TARGET = $(BIN_DIR)/game
 # Compilador e flags
 CXX = g++
 CXXFLAGS = -I$(INCLUDE_DIR) -I$(INCLUDE_DIR2) -g
-LDFLAGS = -L$(LIB_DIR) -lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS = -L$(LIB_DIR) -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 # Arquivos fonte e objeto
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp)

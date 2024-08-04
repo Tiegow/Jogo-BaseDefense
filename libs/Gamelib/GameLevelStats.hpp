@@ -1,6 +1,8 @@
 #ifndef LEVELSTATS_HPP
 #define LEVELSTATS_HPP
 
+#include <SFML/Audio.hpp>
+
 struct GameLevelStats
 {
     //Fase
@@ -18,6 +20,29 @@ struct GameLevelStats
 
     void statsNext();
     void statsReset();
+};
+
+struct GameLevelAudios
+{
+    sf::SoundBuffer bufferT1;
+    sf::Sound tiroBaixoSom;
+
+    sf::SoundBuffer bufferT2;
+    sf::Sound tiroSom;
+
+    sf::SoundBuffer bufferAtbase;
+    sf::Sound atingidoBaseSom;
+
+    sf::SoundBuffer bufferAtinim;
+    sf::Sound atingidoInimSom;
+
+    sf::SoundBuffer bufferUpgrade;
+    sf::Sound upgradeSom;
+
+    sf::SoundBuffer bufferColetar;
+    sf::Sound coletarSom;
+    
+    sf::Music musica1;
 };
 
 struct PlayerLevelStats

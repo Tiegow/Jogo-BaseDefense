@@ -15,18 +15,22 @@ void GameLevelStats::statsNext()
         this->inimSpawnVel -= 0.25; //Reduz o tempo para surgir inimigos
     }
     
-    this->maxInim++; //Aumenta a quantidade maxima de inimigos
+    if (this->level < 14)
+    {
+        this->maxInim++; //Aumenta a quantidade maxima de inimigos
+    }    
 
     //Diminui as chances de caixas (minimo de 6%)
     if (this->chancesDropMun > 0.06)
     {
-       this->chancesDropMun -= 0.02;  
+       this->chancesDropMun -= 0.04;  
     }
     if (this->chancesDropVida > 0.06)
     {
-        this->chancesDropVida -= 0.02;
+        this->chancesDropVida -= 0.04;
     }
 
+    //Abilita outros inimigos ao passar de fases
     if (this->level == 3)
     {
         this->inim2chance += 0.30;
@@ -58,7 +62,7 @@ void GameLevelStats::statsReset()
 
 void PlayerLevelStats::statsUpgradeVida()
 {
-    int vidaUp = this->vidaMaxima + 25;
+    int vidaUp = this->vidaMaxima + 10;
     this->vidaLevel++;
     this->vidaMaxima = vidaUp;
     this->vidaPlayer = vidaMaxima;

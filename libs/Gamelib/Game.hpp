@@ -35,12 +35,16 @@ private:
     Base base;
     GameGUI GUI;
 
+    //Audio
+    GameLevelAudios audios;
+
     std::list <Inimigo*> inimigos;
     std::list <Caixadrop*> caixas;
     std::list <Tiro*> tiros;
 
     void initVars();
     void initTexturas();
+    void initSom();
     void initJanela();
 
     void renderPause();

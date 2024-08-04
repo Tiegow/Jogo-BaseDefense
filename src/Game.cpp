@@ -73,6 +73,33 @@ void Game::initTexturas(){
     this->texturas["UPEB"]->loadFromFile("./assets/UpgradeEB.png");
 }
 
+void Game::initSom()
+{
+    this->audios.musica1.openFromFile("./assets/Audio/TowerDefenseTheme.wav");
+
+    this->audios.bufferT1.loadFromFile("./assets/Audio/laser1.wav");
+    this->audios.tiroBaixoSom.setBuffer(this->audios.bufferT1);
+
+    this->audios.bufferT2.loadFromFile("./assets/Audio/laser4.wav");
+    this->audios.tiroSom.setBuffer(this->audios.bufferT2);
+
+    this->audios.bufferAtbase.loadFromFile("./assets/Audio/hit.wav");
+    this->audios.atingidoBaseSom.setBuffer(this->audios.bufferAtbase);
+
+    this->audios.bufferAtinim.loadFromFile("./assets/Audio/kill.wav");
+    this->audios.atingidoInimSom.setBuffer(this->audios.bufferAtinim);
+
+    this->audios.bufferUpgrade.loadFromFile("./assets/Audio/powerUp.wav");
+    this->audios.upgradeSom.setBuffer(this->audios.bufferUpgrade);
+
+    this->audios.bufferColetar.loadFromFile("./assets/Audio/colect.wav");
+    this->audios.coletarSom.setBuffer(this->audios.bufferColetar);
+
+    this->audios.musica1.setVolume(30);
+    this->audios.musica1.play();
+    this->audios.musica1.setLoop(true);
+}
+
 void Game::initJanela(){
     this->videoMode.width = 1800;
     this->videoMode.height = 1300;
@@ -252,6 +279,7 @@ void Game::renderUpgrade()
         //Upgrade Vida
         if (botaoPres(*this->janela, playerVUp.getGlobalBounds()))
         {
+            this->audios.upgradeSom.play();
             this->heroi.playerStats.statsUpgradeVida();
 
             //Começando nova fase
@@ -261,6 +289,7 @@ void Game::renderUpgrade()
         //Upgrade Cadencia
         else if (botaoPres(*this->janela, playerTUp.getGlobalBounds()))
         {
+            this->audios.upgradeSom.play();
             this->heroi.playerStats.statsUpgradeCadencia();
 
             //Começando nova fase
@@ -270,6 +299,7 @@ void Game::renderUpgrade()
         //Upgrade Velocidade
         else if (botaoPres(*this->janela, playerSUp.getGlobalBounds()))
         {
+            this->audios.upgradeSom.play();
             this->heroi.playerStats.statsUpgradeVelocidade();
 
             //Começando nova fase
@@ -279,6 +309,7 @@ void Game::renderUpgrade()
         //Upgrade Velocidade Projétil
         else if (botaoPres(*this->janela, playerTSUp.getGlobalBounds()))
         {
+            this->audios.upgradeSom.play();
             this->heroi.playerStats.statsUpgradeVelT();
 
             //Começando nova fase
@@ -288,6 +319,7 @@ void Game::renderUpgrade()
         //Upgrade Cura Base
         else if (botaoPres(*this->janela, baseVUp.getGlobalBounds()))
         {
+            this->audios.upgradeSom.play();
             this->base.stats.statsUpgradeCura();
             this->base.restaurar();
 
@@ -298,6 +330,7 @@ void Game::renderUpgrade()
         //Upgrade Velocidade Cura Base
         else if (botaoPres(*this->janela, baseCUp.getGlobalBounds()))
         {
+            this->audios.upgradeSom.play();
             this->base.stats.statsUpgradeVel();
 
             //Começando nova fase
@@ -307,6 +340,7 @@ void Game::renderUpgrade()
         //Upgrade Velocidade Escudo Base
         else if (botaoPres(*this->janela, baseEUp.getGlobalBounds()))
         {
+            this->audios.upgradeSom.play();
             this->base.stats.statsUpgradeEscudo();
 
             //Começando nova fase
@@ -321,12 +355,15 @@ void Game::renderUpgrade()
 Game::Game(){
     this->initVars();
     this->initJanela();
+    this->initSom();
     this->initTexturas();
     this->base.spawn(*this->janela);
     this->heroi.setPos(centrObjeto(this->janela->getSize(), this->heroi.getBounds()));
 }
 
 Game::~Game(){
+    this->audios.musica1.stop();
+
     delete this->janela;
     this->janela = nullptr;
     
@@ -377,6 +414,7 @@ void Game::tratarEventos(){
                 //Q
                     if(this->evento.key.code == sf::Keyboard::Q && this->heroi.podeAtacar()){
                         this->mousePos = getMouseCoords(*this->janela);
+                        this->audios.tiroSom.play();
                         this->tiros.push_back(new Tiro(this->texturas["TIRO"], this->heroi.getCentro(), mousePos, this->heroi.playerStats.velTiroPlayer, 10, false));
                         this->heroi.updateMun();
                     }
@@ -442,6 +480,7 @@ void Game::tratarTiros(){
             //Base
             if (tiro->getBounds().intersects(this->base.baseBody.getGlobalBounds()))
             {
+                this->audios.atingidoBaseSom.play();
                 this->base.receberDano(tiro->atingir());
             }
             //Player
@@ -456,6 +495,7 @@ void Game::tratarTiros(){
             for(auto *inimigo : this->inimigos){
                 if (tiro->getBounds().intersects(inimigo->getBounds()))
                 {
+                    this->audios.atingidoInimSom.play();
                     inimigo->receberDano(tiro->atingir());
                 }
             }
@@ -499,11 +539,15 @@ void Game::spawnInimigos()
         this->inimigos.push_back(new Inimigo(1, this->texturas["INIMIGO1"], *this->janela));
     }
 
-    if (this->stats.level >= 3)
+    if (this->stats.level >= 12)
+    {
+        this->inimigos.push_back(new Inimigo(1, this->texturas["INIMIGO1"], *this->janela));
+        this->inimigos.push_back(new Inimigo(4, this->texturas["INIMIGO1"], *this->janela));
+    }
+    else if (this->stats.level >= 3)
     {
         this->inimigos.push_back(new Inimigo(1, this->texturas["INIMIGO1"], *this->janela));
     }
-    
 }
 
 void Game::tratarInimigos()
@@ -531,16 +575,18 @@ void Game::tratarInimigos()
             inimigo->update(this->heroi.getCentro(), *this->janela);
         }
 
+        //Ataque inimigo
         if (inimigo->atacar())
         {
             if (inimigo->getTipo() == 4)
             {
+                this->audios.tiroBaixoSom.play();
                 this->tiros.push_back(new Tiro(
                     this->texturas["TIRO"], 
                     inimigo->getCentro(), 
                     this->base.centro, 
                     10, 
-                    this->base.stats.escudoBase + 3, 
+                    this->base.stats.escudoBase + 3, //Dano com base no escudo da base
                     true
                 ));
             }
@@ -551,13 +597,13 @@ void Game::tratarInimigos()
                     inimigo->getCentro(), 
                     this->base.centro, 
                     10, 
-                    5, 
+                    8, 
                     true
                 ));
             }
             else
             {
-                this->tiros.push_back(new Tiro(this->texturas["TIRO"], inimigo->getCentro(), this->heroi.getCentro(), 10, 10, true));
+                this->tiros.push_back(new Tiro(this->texturas["TIRO"], inimigo->getCentro(), this->heroi.getCentro(), 10, 5, true));
             }
         }
 
@@ -591,6 +637,7 @@ void Game::tratarCaixas()
     {
         if (caixa->getBounds().intersects(this->heroi.getBounds()))
         {
+            this->audios.coletarSom.play();
             this->heroi.coletarCaixa(caixa->getMunicao(), caixa->getVida());
             delete caixa;
             caixa = nullptr;
