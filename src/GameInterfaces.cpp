@@ -1,5 +1,4 @@
 #include "GameInterfaces.hpp"
-#include <iostream>
 
 sf::Vector2f centrObjeto(sf::Vector2u tamJanela, sf::Vector2f tamObj){
     /*
@@ -38,8 +37,8 @@ sf::Vector2f getMouseCoords(sf::RenderWindow& janela){
 
 sf::Vector2f getPosCentro(sf::Sprite& sprite){
     /*
-        Calcula a posição do ponto central do sprite
-            *SFML não considera o centro do sprite como sendo as coordenadas da sua posição
+        Calcula a posição do ponto central de um sprite
+            *SFML não considera o centro do sprite como sendo as coordenadas (0, 0) da sua posição
     */
     sf::Vector2f spritePos = sprite.getPosition();
     sf::FloatRect spriteDimensoes = sprite.getGlobalBounds();
@@ -50,8 +49,7 @@ sf::Vector2f getPosCentro(sf::Sprite& sprite){
 
 sf::Vector2f getPosCentro(sf::RectangleShape& retangulo){
     /*
-        Calcula a posição do ponto central do retangulo
-            *SFML não considera o centro do retangulo como sendo as coordenadas da sua posição
+        Calcula a posição do ponto central de um retangulo
     */
     sf::Vector2f retanguloPos = retangulo.getPosition();
     sf::FloatRect retanguloDimensoes = retangulo.getGlobalBounds();

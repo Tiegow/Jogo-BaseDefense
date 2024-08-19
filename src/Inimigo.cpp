@@ -1,6 +1,5 @@
 #include "Inimigo.hpp"
 #include <time.h>
-#include <iostream>
 
 Inimigo::Inimigo()
 {

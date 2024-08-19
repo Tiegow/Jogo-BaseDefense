@@ -4,6 +4,10 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
+/*
+    Conjunto de funções para manipular elementos gráficos na tela e interfaces
+*/
+
 sf::Vector2f centrObjeto(sf::Vector2u tamJanela, sf::Vector2f tamObj);
 sf::Vector2f centrObjeto(sf::Vector2u tamJanela, sf::FloatRect objBounds);
 sf::Vector2f getMouseCoords(sf::RenderWindow& janela);

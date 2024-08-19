@@ -49,6 +49,7 @@
         "numbers": "cpp",
         "typeinfo": "cpp",
         "list": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "fstream": "cpp"
     }
 }

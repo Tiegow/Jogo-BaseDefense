@@ -1,5 +1,4 @@
 #include "GameLevelStats.hpp"
-#include <iostream>
 
 void GameLevelStats::statsNext()
 {
@@ -7,7 +6,7 @@ void GameLevelStats::statsNext()
         Atualiza os status da fase ao passar de nivel
     */
     this->level++;
-    this->tempoLevel += 3; //Aumenta o tempo para sobreviver a fase
+    this->tempoLevel += 2; //Aumenta o tempo para sobreviver a fase
 
     //Aumenta a velocidade de surgimento de inimigos (maxima de 0.5s)
     if (this->inimSpawnVel > 0.5)
@@ -21,14 +20,14 @@ void GameLevelStats::statsNext()
     }    
 
     //Diminui as chances de caixas (minimo de 6%)
-    if (this->chancesDropMun > 0.06)
-    {
-       this->chancesDropMun -= 0.04;  
-    }
-    if (this->chancesDropVida > 0.06)
-    {
-        this->chancesDropVida -= 0.04;
-    }
+        // if (this->chancesDropMun > 0.06)
+        // {
+        //    this->chancesDropMun -= 0.04;  
+        // }
+        // if (this->chancesDropVida > 0.06)
+        // {
+        //     this->chancesDropVida -= 0.04;
+        // }
 
     //Abilita outros inimigos ao passar de fases
     if (this->level == 3)
@@ -84,7 +83,6 @@ void PlayerLevelStats::statsUpgradeCadencia()
         this->municaoPlayer += 25;
         this->cadLevel++;
     }
-    std::cout << this->cadenciaAtaquePlayer << "\n";
 }
 
 void PlayerLevelStats::statsUpgradeVelT()
@@ -104,7 +102,7 @@ void PlayerLevelStats::statsReset()
     this->vidaPlayer = 100;
     this->vidaMaxima = 100;
     this->municaoPlayer = 25;
-    this->velocidadePlayer = 4;
+    this->velocidadePlayer = 4.5;
     this->cadenciaAtaquePlayer = 1;
     this->velTiroPlayer = 10;
 }
@@ -117,7 +115,6 @@ void BaseLevelStats::statsUpgradeVel()
         this->velCuraBase = velUp;
         this->velLevel++;
     }    
-    std::cout << this->velCuraBase << "\n";
 }
 
 void BaseLevelStats::statsUpgradeCura()
@@ -128,7 +125,6 @@ void BaseLevelStats::statsUpgradeCura()
         this->autoCuraBase = curaUp;
         this->curaLevel++;
     }
-    std::cout << this->autoCuraBase << "\n";
 }
 
 void BaseLevelStats::statsUpgradeEscudo()
@@ -138,8 +134,7 @@ void BaseLevelStats::statsUpgradeEscudo()
         int escUp = this->escudoBase + 1;
         this->escudoBase = escUp;
         this->escudoLevel++;
-    }   
-    std::cout << this->escudoBase << "\n";
+    }  
 }
 
 void BaseLevelStats::statsReset()

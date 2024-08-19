@@ -13,8 +13,8 @@ Caixadrop::Caixadrop(char tipo, sf::Texture* textura, sf::Vector2f posicao)
     this->vidaQtd = 0;
     if (tipo == 'M')
     {
-        this->munMaxQtd = 35;
-        this->munMinQtd = 10;
+        this->munMaxQtd = 50;
+        this->munMinQtd = 20;
         this->munQtd = rand() % (this->munMaxQtd - this->munMinQtd + 1) + this->munMinQtd;
     }
     else if (tipo == 'V')

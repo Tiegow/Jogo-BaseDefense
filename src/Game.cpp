@@ -8,6 +8,16 @@ void Game::initVars(){
     this->over = false;
     this->up = false;
     this->tempo = this->stats.tempoLevel;
+
+    //Iniciando o arquivo de score
+    std::ifstream saveScore("score.txt"); //Abre o arquivo somente para leitura
+    if (!saveScore.good())  //Se houver algum erro (arquivo nao existir), crie um arquivo com o score salvo 0
+    {
+        std::fstream saveScore("score.txt", std::ios::out);
+        saveScore << 0;
+        saveScore.close();
+    }
+    saveScore.close();
 }
 
 void Game::initTexturas(){
@@ -105,6 +115,35 @@ void Game::initJanela(){
     this->videoMode.height = 1300;
     this->janela = new sf::RenderWindow(this->videoMode, "Base Defense", sf::Style::Titlebar | sf::Style::Close);
     this->janela->setFramerateLimit(60);
+}
+
+//Construtores | Destrutores
+Game::Game(){
+    this->initVars();
+    this->initJanela();
+    this->initSom();
+    this->initTexturas();
+    this->base.spawn(*this->janela);
+    this->heroi.setPos(centrObjeto(this->janela->getSize(), this->heroi.getBounds()));
+}
+
+Game::~Game(){
+    this->audios.musica1.stop();
+
+    delete this->janela;
+    this->janela = nullptr;
+    
+    //Itera sobre o map texturas para deletar os ponteiros pra sf::Texture
+    for(auto &textura : this->texturas){
+        delete textura.second;
+        textura.second = nullptr;
+    }
+
+    this->limparGame();
+}
+//----------------------------------------//
+bool Game::isRunning(){
+    return this->janela->isOpen();
 }
 
 void Game::renderPause()
@@ -349,39 +388,6 @@ void Game::renderUpgrade()
         }
     }
 }
-//----------------------------------------//
-
-//Construtores | Destrutores
-Game::Game(){
-    this->initVars();
-    this->initJanela();
-    this->initSom();
-    this->initTexturas();
-    this->base.spawn(*this->janela);
-    this->heroi.setPos(centrObjeto(this->janela->getSize(), this->heroi.getBounds()));
-}
-
-Game::~Game(){
-    this->audios.musica1.stop();
-
-    delete this->janela;
-    this->janela = nullptr;
-    
-    //Itera sobre o map texturas para deletar os ponteiros pra sf::Texture
-    for(auto &textura : this->texturas){
-        delete textura.second;
-        textura.second = nullptr;
-    }
-
-    this->limparGame();
-}
-//----------------------------------------//
-
-
-//Funções public
-bool Game::isRunning(){
-    return this->janela->isOpen();
-}
 
 void Game::tratarEventos(){
     //Tratando eventos
@@ -463,6 +469,28 @@ void Game::limparGame()
 
 void Game::proximaFase()
 {
+    //Salvando o novo score em arquivo
+        int score = this->stats.level; //Nivel atual
+        int salvo; //Score salvo no arquivo
+
+        std::fstream saveScore("score.txt", std::ios::in | std::ios::out);
+        if (!saveScore.is_open())
+        {
+            std::cerr << "Erro ao abrir\n";
+        }
+
+        saveScore >> salvo;
+
+        if (salvo < score)
+        {
+            saveScore.clear();
+            saveScore.seekp(0); //Move o ponteiro de escrita para o inicio
+            saveScore << score; //Salva o novo score mais alto
+            saveScore.flush();
+        }
+        
+        saveScore.close();
+
     this->limparGame();
     this->stats.statsNext();
     this->tempo = this->stats.tempoLevel;
@@ -542,7 +570,7 @@ void Game::spawnInimigos()
     if (this->stats.level >= 12)
     {
         this->inimigos.push_back(new Inimigo(1, this->texturas["INIMIGO1"], *this->janela));
-        this->inimigos.push_back(new Inimigo(4, this->texturas["INIMIGO1"], *this->janela));
+        this->inimigos.push_back(new Inimigo(2, this->texturas["INIMIGO2"], *this->janela));
     }
     else if (this->stats.level >= 3)
     {
@@ -592,6 +620,7 @@ void Game::tratarInimigos()
             }
             else if (inimigo->getTipo() == 3)
             {
+                this->audios.tiroBaixoSom.play();
                 this->tiros.push_back(new Tiro(
                     this->texturas["TIRO"], 
                     inimigo->getCentro(), 
@@ -603,6 +632,7 @@ void Game::tratarInimigos()
             }
             else
             {
+                this->audios.tiroSom.play();
                 this->tiros.push_back(new Tiro(this->texturas["TIRO"], inimigo->getCentro(), this->heroi.getCentro(), 10, 5, true));
             }
         }
@@ -651,6 +681,11 @@ void Game::update(){
     sf::Time dt = this->levelClock.getElapsedTime();
     this->tempo = this->stats.tempoLevel - dt.asSeconds();
 
+    int scoreSalvo; //Score salvo no arquivo
+    std::fstream saveScore("score.txt", std::ios::in);
+
+    saveScore >> scoreSalvo;
+
     if (dt.asSeconds() >= this->stats.tempoLevel)
     {
         this->up = true;
@@ -683,7 +718,11 @@ void Game::update(){
             this->tratarInimigos();
             this->tratarTiros();
             this->tratarCaixas();
-            this->GUI.update(this->heroi.playerStats.vidaPlayer, this->heroi.playerStats.municaoPlayer, this->stats.level, this->tempo);
+            this->GUI.update(
+                this->heroi.playerStats.vidaPlayer, 
+                this->heroi.playerStats.municaoPlayer, 
+                this->stats.level, this->tempo,
+                scoreSalvo);
         }
     }
     else

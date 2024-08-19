@@ -1,5 +1,4 @@
 #include "Tiro.hpp"
-#include <iostream>
 
 Tiro::Tiro()
 {

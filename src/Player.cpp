@@ -1,5 +1,4 @@
 #include "Player.hpp"
-#include <iostream>
 
 void Player::initTextura(){
     this->textura.loadFromFile("./assets/Player.png"); //Carrega a textura a partir de um arquivo

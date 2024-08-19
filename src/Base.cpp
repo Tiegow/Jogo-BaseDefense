@@ -1,5 +1,4 @@
 #include "Base.hpp"
-#include <iostream>
 
 Base::Base()
 {
@@ -18,6 +17,7 @@ Base::~Base()
 {
 }
 
+// Funções
 void Base::curar()
 {
     this->vida += this->stats.autoCuraBase;
@@ -28,7 +28,6 @@ int Base::getVida()
     return this->vida;
 }
 
-// Funções
 void Base::spawn(sf::RenderTarget& tela){
     sf::Vector2u tamJanela = tela.getSize(); //tamanho da janela
     sf::Vector2f tamBase = this->baseBody.getSize(); //tamanho da base

@@ -4,6 +4,7 @@
 #include <map>
 #include <list>
 #include <string>
+#include <fstream>
 #include "GameLevelStats.hpp"
 #include "Base.hpp"
 #include "Player.hpp"

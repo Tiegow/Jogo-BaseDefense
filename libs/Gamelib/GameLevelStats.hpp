@@ -7,7 +7,7 @@ struct GameLevelStats
 {
     //Fase
     unsigned level = 1;
-    float tempoLevel = 15; //tempo em segundos para passar de nivel
+    float tempoLevel = 12; //tempo em segundos para passar de nivel
 
     float inimSpawnVel = 4; //tempo em segundos para surgir inimigos
     int maxInim = 5;
@@ -51,12 +51,12 @@ struct PlayerLevelStats
     unsigned velLevel = 1;
     unsigned cadLevel = 1;
     unsigned cadMaxLevel = 5;
-    unsigned velTLevel = 1;
+    unsigned velTLevel = 1; //Nivel da velocidade do projétil
 
     int vidaPlayer = 100;
     int vidaMaxima = 100;
     int municaoPlayer = 25;
-    float velocidadePlayer = 4;
+    float velocidadePlayer = 4.5;
     float cadenciaAtaquePlayer = 1; //Tempo entre um ataque e outro em segundos
     float velTiroPlayer = 10; //Velocidade do projétil
     
@@ -71,7 +71,7 @@ struct BaseLevelStats
 {
     //Base
     unsigned velLevel = 1;
-    unsigned maxVelLevel = 5;
+    unsigned maxVelLevel = 4;
     unsigned curaLevel = 1;
     unsigned maxCuraLevel = 5;
     unsigned escudoLevel = 1;

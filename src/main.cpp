@@ -1,6 +1,4 @@
 #include "game.hpp"
-// #include <SFML/System.hpp>
-#include <iostream>
 
 int main()
 {
